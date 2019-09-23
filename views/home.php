@@ -1,5 +1,25 @@
-<div class="home row sky">
-    <div class="col s12">
-        <ha-shem>יהוה</ha-shem>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="K Chikuse">
+  <meta name="description" content="Concordance">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#418980">
+  <link href="favicon.ico" rel="icon">
+  <link href="favicon.ico" rel="apple-touch-icon">
+  <link href="assets/css/materialize.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
+  <title>Concordance</title>
+</head>
+<body>
+  <?php require_once "sidebar.php"; ?>
+  <?php require_once "verses.php"; ?>
+  <script src="js/jquery.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/app.js"></script>
+  <noscript>Please enable JavaScript</noscript>
+</body>
+</html>
