@@ -1,10 +1,10 @@
-addEventListener('DOMContentLoaded', () => {
-    const elems = document.querySelector(".sidenav");
-    const instances = M.Sidenav.init(elems, {});
-    // const links = document.querySelectorAll("nav li a");
-    // for (let i = 0; i < links.length; i++) {
-    //     links[i].addEventListener("click", () => {
-    //         instances[0].close();
-    //     });
-    // }
+$(() => {
+    
+    M.Sidenav.init($(".sidenav"), {});
+
+    $(".verses p w").on("click", async function() {
+        const sn = $(this).attr("lemma").split(":").pop();
+        const response = await $.get(`sn/${sn}`);
+        console.log(response);
+    });
 });

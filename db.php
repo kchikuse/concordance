@@ -1,14 +1,26 @@
 <?php
 
-R::setup("sqlite:api/bible.sqlite");
+R::setup("sqlite:bible.sqlite");
 
-function GetVerses($book, $chapter)
+function verses($book, $chapter)
 {
     return R::getAll(
         "SELECT * FROM kjv WHERE book = :book AND chapter = :chapter",
         array(
             ":book" => $book,
             ":chapter" => $chapter
+        )
+    );
+}
+
+function strongs($sn)
+{
+    $sn = str_replace("H0", "H", $sn);
+
+    return R::getAll(
+        "SELECT * FROM lexicon WHERE number = :sn",
+        array(
+            ":sn" => $sn
         )
     );
 }
@@ -37,7 +49,7 @@ function books()
         "Psalms",
         "Proverbs",
         "Ecclesiastes",
-        "Song of songs",
+        "Song of Songs",
         "Isaiah",
         "Jeremiah",
         "Lamentations",

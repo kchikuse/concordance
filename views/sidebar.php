@@ -4,9 +4,7 @@
         <ul id="slide-out" class="sidenav">
             <li>
                 <div class="user-view">
-                    <div class="background">
-                        
-                    </div>
+                    <div class="background"></div>
                     <a href="#/">
                         <span class="circle"></span>
                     </a>
@@ -14,7 +12,7 @@
                 </div>
             </li>
             
-            <?php foreach(books() as $key => $book) : ?>
+            <?php foreach($books as $key => $book) : ?>
             <li>
                 <a href="?book=<?=$key + 1;?>" class="waves-effect">
                     <?=$book;?>
