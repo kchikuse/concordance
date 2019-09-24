@@ -1,6 +1,5 @@
 <nav>
     <div class="nav-wrapper">
-        <a href="#" class="brand-logo right">Concordance</a>
 
         <select class="book left">
             {foreach $books as $bk}

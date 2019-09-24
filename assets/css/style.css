@@ -75,10 +75,15 @@
   margin: 0;
 }
 
+::-webkit-scrollbar {
+  width: 0px; 
+  background: transparent;
+}
+
 body {
-  font-size: 16px;
-  color: #bdd6d0;
-  background-color: #333;
+  font-size: 17px;
+  color: #71afd3;
+  background-color: #242424;
   font-family: "Roboto Regular";
   overscroll-behavior: none;
   -webkit-touch-callout: none;
@@ -117,23 +122,36 @@ nav select {
   display: block;
   width: 200px;
   margin-left: 10px;
-}
+} 
 
-nav select.chapter {
+ nav select.chapter {
   width: 100px;
-}
-
+} 
 
 .verses.row {
   margin: 0;
   height: 100vh;
   overflow-y: auto;
+  padding: 15px;
+}
+
+.verses p {
+  margin-bottom: 7px;
+}
+
+.verses p span {
+  color: #e39963;
+  font-weight: bold;
 }
 
 .verses p w {
   -webkit-user-select: all;
   user-select: all;
   cursor: pointer;
+}
+
+.verses p w:hover {
+  color: #e39963;
 }
 
 .verses p note {
@@ -148,44 +166,14 @@ nav select.chapter {
   background-color: #C79292;
 }
 
-loader {
+#tooltip {
   display: block;
-  overflow: hidden;
-  height: 100vh;
-  width: 100vw;
-  z-index: 2;
-}
-
-loader::after {
-  will-change: transform;
-  animation: spin 1.1s infinite linear;
-  border-color: rgba(255,255,255,.3);
-  border-top-color: white;
-  content: "";
-  border-width: 9px;
-  border-style: solid;
-  border-radius: 50%; 
-  position:absolute;
-  margin: auto;
-  height: 100px;
-  width: 100px;
-  bottom: 0; 
-  left: 0; 
-  right: 0;
-  top: 0;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0
-  }
-  to {
-    opacity: 1
-  }
-}
+  height: 250px;
+  width: 200px;
+  border: solid #ede5e5 1px;
+  position: absolute;
+  color: white;
+  background: grey;
+  padding: 7px;
+  display: none;
+}*/
