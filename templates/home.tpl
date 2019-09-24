@@ -17,6 +17,6 @@
 <body>
   {include file="navbar.tpl"}
   {include file="verses.tpl"}
-  <script src="app.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

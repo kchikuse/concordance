@@ -1,5 +1,7 @@
+<div id="tooltip"></div>
+
 <div class="verses row">
     {foreach $verses as $verse}
-        <p>{$verse.verse} {$verse.text}</p>
+        <p><span>{$verse.verse}</span> {$verse.text}</p>
     {/foreach}
 </div>
