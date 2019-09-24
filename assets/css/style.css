@@ -108,28 +108,21 @@ nav {
   background-color: teal;
 }
 
-nav .brand-logo {
-  font-size: 18px;
+nav .nav-wrapper {
+  display: flex;
+  align-items: center;
 }
 
-nav .sidenav li {
-  border-bottom: solid 1px #e0e0e0;
+nav select {
+  display: block;
+  width: 200px;
+  margin-left: 10px;
 }
 
-nav .sidenav li:nth-child(1) {
-  border: none;
+nav select.chapter {
+  width: 100px;
 }
 
-nav span.circle {
-  background-image: url(../images/kc.jpg);
-  background-position: center;
-  background-size: cover;
-}
-
-nav .background {
-  background: teal; 
-  background: linear-gradient(to bottom, #48b1bf, teal); 
-}
 
 .verses.row {
   margin: 0;
