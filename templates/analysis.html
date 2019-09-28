@@ -1,0 +1,23 @@
+<div class="card blue-grey">
+  <div class="card-content white-text">
+    <span class="card-title">{$word.number}</span>
+    <p><b>{$word.lemma}</b></p>
+    
+    {if $word.translit}
+    <p><i>{$word.translit}</i></p>
+    {/if}
+
+    {if $word.pron}
+    <p><i>{$word.pron}</i></p>
+    {/if}
+
+    <p>{$word.derivation}</p>
+    <p>{$word.strongs_def}</p>
+    <p>{$word.kjv_def} (kjv)</p>
+    
+    {if $word.xlit}
+    <p>{$word.xlit}</p>
+    {/if}
+  
+  </div>
+</div>
