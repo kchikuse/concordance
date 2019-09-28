@@ -5,33 +5,25 @@ require "flight/Flight.php";
 require "rb.php";
 require "db.php";
 
-Flight::route("OPTIONS *", function () {
-  Flight::json(array());
-});
-
 Flight::route("GET /", function () {
-  $book    = parse(Flight::request()->query->book);
-  $chapter = parse(Flight::request()->query->chapter);
-  
-  $verses = verses($book, $chapter);
-  $chapters = chapters($book);
-  $books = books();
+  $book    = get(Flight::request()->query->book);
+  $chapter = get(Flight::request()->query->chapter);
 
-  Flight::render("home.tpl",
-    array(
-      "chapters" => $chapters,
+  Flight::render("home.html",
+    [
+      "verses" => verses($book, $chapter),
+      "chapters" => chapters($book),
       "chapter" => $chapter,
-      "verses" => $verses,
-      "books" => $books,
+      "books" => books(),
       "book" => $book
-    ));
+    ]);
 });
 
 Flight::route("GET /sn/@sn", function ($sn) {
-  Flight::json(strongs($sn));
+  Flight::render("analysis.html", ["word" => strongs($sn)]);
 });
 
-Flight::register("view", "Smarty", array(), function($smarty) {
+Flight::register("view", "Smarty", array(), function ($smarty) {
   $smarty->template_dir = "templates/";
   $smarty->compile_dir = "smarty/templates_c/";
   $smarty->config_dir = "smarty/config/";
@@ -39,7 +31,7 @@ Flight::register("view", "Smarty", array(), function($smarty) {
   $smarty->debugging = false;
 });
 
-Flight::map("render", function($template, $data) {
+Flight::map("render", function ($template, $data) {
   Flight::view()->assign($data);
   Flight::view()->display($template);
 });
