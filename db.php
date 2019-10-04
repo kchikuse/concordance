@@ -2,8 +2,7 @@
 
 R::setup("sqlite:bible.sqlite");
 
-function verses($book, $chapter)
-{
+function verses($book, $chapter) {
     return R::getAll(
         "SELECT * FROM kjv WHERE book = :book AND chapter = :chapter",
         array(
@@ -13,15 +12,13 @@ function verses($book, $chapter)
     );
 }
 
-function strongs($sn)
-{
+function strongs($sn) {
     $sn = str_replace("H0", "H", strtoupper($sn));
 
     return R::findOne("lexicon", "number = ?", [$sn]);
 }
 
-function books()
-{
+function books() {
     return [
         [
             "id" => 1,
@@ -356,18 +353,79 @@ function books()
     ];
 }
 
-function chapters($id)
-{
+function book($bookid) {
     $books = books();
     foreach ($books as $book) {
-        if ($book["id"] == $id) {
-            return range(1, $book["chapters"]);
+        if ($book["id"] == $bookid) {
+            return $book;
         }
     }
 }
 
-function get($i)
-{
-    if (!isset($i) || is_null($i) || !is_numeric($i) || $i < 1) return 1;
-    return $i;
+function chapters($bookid) {
+    return range(1, book($bookid)["chapters"]);
+}
+
+function getnext($book, $chapter) {
+    $nextbook = $book;
+    $nextchapter = $chapter + 1;
+    $totalbooks = count(books());
+    $totalchapters = count(chapters($book));
+    
+    if($nextchapter > $totalchapters) {
+        $nextbook = $book + 1;
+        
+        if($nextbook > $totalbooks) {
+            return;
+        }
+        
+        $nextchapter = 1;
+    }
+
+    return [
+        "book" => book($nextbook), 
+        "chapter" => $nextchapter 
+    ];
+}
+
+function getprev($book, $chapter) {
+    $prevbook = $book;
+    $prevchapter = $chapter - 1;
+    
+    if($prevchapter <= 0) {
+        $prevbook = $book - 1;
+        
+        if($prevbook <= 0) {
+            return;
+        }
+
+        $prevchapter = count(chapters($prevbook));
+    }
+
+    return [
+        "book" => book($prevbook), 
+        "chapter" => $prevchapter 
+    ];
+}
+
+function getbook($query) {
+    $book = $query->book;
+    if (bogus($book)) return 1;
+    $books = count(books());
+    return $book > $books ? $books : $book;
+}
+
+function getchapter($query) {
+    $book = book($query->book);
+    $chapter = $query->chapter;
+    $chapters = $book["chapters"];
+    if (bogus($chapter)) return 1;
+    return $chapter > $chapters ? $chapters : $chapter;
+}
+
+function bogus($value) {
+    return !isset($value) || 
+    is_null($value) || 
+    !is_numeric($value) || 
+    $value < 1;
 }

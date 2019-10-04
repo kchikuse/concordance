@@ -1,15 +1,5 @@
 addEventListener("DOMContentLoaded", () => {
-    const $ = e => document.querySelector(e);
-    const ANALYSIS = $("analysis");
-    const BOOKS = $("select.book");
-    const CHAPTERS = $("select.chapter");
-    const goto = chapter => location.href = `?book=${BOOKS.value}&chapter=${chapter}`;
-
-    BOOKS.onchange = () => goto(1);
-
-    CHAPTERS.onchange = function () {
-        goto(this.value);
-    };
+    const analysis = document.querySelector(".analysis");
 
     document.onclick = async event => {
         const e = event.target;
@@ -22,7 +12,18 @@ addEventListener("DOMContentLoaded", () => {
             if (!sn) return;
 
             const response = await fetch(`sn/${sn}`);
-            ANALYSIS.innerHTML = await response.text();
+            analysis.innerHTML = await response.text();
         }
     };
+
+    (() => {
+        const books = document.querySelector(".books");
+        const book = new URLSearchParams(location.search).get("book");
+        books.scrollTop = document.querySelector(`[book="${book}"]`).offsetTop;
+    })();
+
+    (async function() {
+        const response = await fetch(`sn/H04941`);
+        analysis.innerHTML = await response.text();
+    })();
 });
