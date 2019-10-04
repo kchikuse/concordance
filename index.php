@@ -6,16 +6,18 @@ require "rb.php";
 require "db.php";
 
 Flight::route("GET /", function () {
-  $book    = get(Flight::request()->query->book);
-  $chapter = get(Flight::request()->query->chapter);
+  $book    = getbook(Flight::request()->query);
+  $chapter = getchapter(Flight::request()->query);
 
   Flight::render("home.html",
     [
       "verses" => verses($book, $chapter),
+      "next" => getnext($book, $chapter),
+      "prev" => getprev($book, $chapter),
       "chapters" => chapters($book),
       "chapter" => $chapter,
-      "books" => books(),
-      "book" => $book
+      "book" => book($book),
+      "books" => books()
     ]);
 });
 

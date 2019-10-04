@@ -5,18 +5,62 @@
   <meta name="author" content="K Chikuse">
   <meta name="description" content="Concordance">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Concordance</title>
   <meta name="theme-color" content="#418980">
   <link href="favicon.ico" rel="icon">
   <link href="favicon.ico" rel="apple-touch-icon">
-  <link href="assets/css/materialize.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
-  <title>Concordance</title>
 </head>
 <body>
-  {include file="navbar.html"}
-  {include file="verses.html"}
-  <script src="app.js"></script>
+  <container>
+    <div class="books">
+      <ul>
+        {foreach $books as $b}
+        <a book="{$b.id}" href="?book={$b.id}&chapter=1" {if $b.id eq $book.id} class="active" {/if}>
+          <li>{$b.name}</li>
+        </a>
+        {/foreach}
+      </ul>
+    </div>
+
+    <navigation>
+      <div class="chapters">
+        <details>
+          <summary>CHAPTERS</summary>
+          <ul>
+            {foreach $chapters as $c}
+              <a href="?book={$book.id}&chapter={$c}" {if $c eq $chapter} class="active" {/if}>
+                <li>{$c}</li>
+              </a>
+            {/foreach}
+          </ul>
+        </details>
+      </div>
+      <div class="analysis"></div>
+      <span class="verse-nav">
+        {if $prev.book}
+          <a href="?book={$prev.book.id}&chapter={$prev.chapter}">
+            &larr; {$prev.book.name} {$prev.chapter}
+          </a>
+        {/if}
+
+        {if $next.book}
+          <a href="?book={$next.book.id}&chapter={$next.chapter}">
+            {$next.book.name} {$next.chapter} &rarr;
+          </a>
+        {/if}
+      </span>
+    </navigation>
+
+    <div class="verses">
+      <h1>{$book.name} {$chapter}</h1>
+
+      {foreach $verses as $v}
+        <p><sup>{$v.verse}</sup> {$v.text}</p>
+      {/foreach}
+    </div>
+
+  </container>
 </body>
+<script src="app.js"></script>
 </html>
