@@ -10,15 +10,15 @@ Flight::route("GET /", function () {
   $chapter = getchapter(Flight::request()->query);
 
   Flight::render("home.html",
-    [
-      "verses" => verses($book, $chapter),
-      "next" => getnext($book, $chapter),
-      "prev" => getprev($book, $chapter),
-      "chapters" => chapters($book),
-      "chapter" => $chapter,
-      "book" => book($book),
-      "books" => books()
-    ]);
+  [
+    "verses" => verses($book, $chapter),
+    "next" => getnext($book, $chapter),
+    "prev" => getprev($book, $chapter),
+    "chapters" => chapters($book),
+    "chapter" => $chapter,
+    "book" => book($book),
+    "books" => books()
+  ]);
 });
 
 Flight::route("GET /sn/@sn", function ($sn) {

@@ -1,5 +1,6 @@
 addEventListener("DOMContentLoaded", () => {
-    const analysis = document.querySelector(".analysis");
+    const $ = e => document.querySelector(e);
+    const analysis = $(".analysis");
 
     document.onclick = async event => {
         const e = event.target;
@@ -17,13 +18,7 @@ addEventListener("DOMContentLoaded", () => {
     };
 
     (() => {
-        const books = document.querySelector(".books");
         const book = new URLSearchParams(location.search).get("book");
-        books.scrollTop = document.querySelector(`[book="${book}"]`).offsetTop;
-    })();
-
-    (async function() {
-        const response = await fetch(`sn/H04941`);
-        analysis.innerHTML = await response.text();
+        $(".books").scrollTop = $(`[book="${book}"]`).offsetTop;
     })();
 });
