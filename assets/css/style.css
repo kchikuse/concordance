@@ -8,8 +8,8 @@
 }
 
 :root {
-    --bg-color: #1f2122;
-    --text-color: #bab8b4;
+    --bg-color: #0b2a38;
+    --text-color: #a9a9b3;
     --orange-color: #e39963;
     --blu-color: #054061;
     --link-color: #66afd5;
@@ -44,6 +44,7 @@ body {
     font-family: "Roboto Regular";
     background-color: var(--bg-color);
     color: var(--text-color);
+    user-select: none;
     font-size: 16px;
 }
 
@@ -53,12 +54,17 @@ container {
     grid-template-columns: 15vw 25vw 60vw;
 }
 
+navigation {
+    display: grid;
+    grid-template-rows: 5vh 90vh 5vh;
+}
+
 divinename {
     font-weight: bold;
     color: #98bacb;
 }
 
-.books,  
+.books, 
 .verses, 
 .chapters, 
 .analysis {
@@ -66,31 +72,37 @@ divinename {
     height: 100%;
 }
 
-.books,
-.verses{
+.books, 
+.verses {
     overflow-y: auto;
 }
 
-.books ul,
+.books ul, 
 .chapters ul {
     list-style: none;
 }
 
 .books ul li {
+    border: solid 1px var(--light-grey);
+    border-top: none;
+}
+
+.books ul li a {
+    display:block;
     padding: 12px 30px;
     border: solid 1px var(--light-grey);
     border-top: none;
 }
 
-.books ul .active li,
-.books ul li:hover {
+.books ul .active, 
+.books ul li a:hover {
     background-color: var(--light-grey);
     color: var(--orange-color);
-    font-weight: 800;
+    font-weight: bold;
 }
 
-.books ul a,
-.chapters ul a,
+.books ul a, 
+.chapters ul a, 
 .verse-nav a {
     text-decoration: none;
     color: var(--link-color);
@@ -112,8 +124,9 @@ divinename {
 
 .verses p sup, 
 .verses p w:hover, 
-.verses p divinename:hover,
-.chapters ul a:hover {
+.chapters a:hover, 
+.verse-nav a:hover, 
+.verses p divinename:hover {
     color: var(--orange-color);
 }
 
@@ -121,11 +134,6 @@ divinename {
     -webkit-user-select: all;
     user-select: all;
     cursor: pointer;
-}
-
-navigation {
-    display: grid;
-    grid-template-rows: 5vh 90vh 5vh;
 }
 
 .chapters details {
@@ -137,18 +145,14 @@ navigation {
     background-color: #100f0f;
 }
 
-.chapters details ul {
-    margin-top: 20px;
-}
-
-.chapters summary {
+.chapters details summary {
+    padding: 8px;
     outline: none;
-    font-weight: 800;
+    font-weight: bold;
 }
 
-.chapters ul .active {
-    color: var(--orange-color);
-    font-weight: 800;
+.chapters ul {
+    margin-top: 21px;
 }
 
 .chapters ul li {
@@ -158,22 +162,30 @@ navigation {
     text-align: center;
 }
 
+.chapters ul li a {
+    display: inline-block;
+}
+
+.chapters ul li .active,
 .chapters ul li:hover {
     transform: scale(1.3);
+    color: var(--orange-color);
+    font-weight: bold;
 }
 
 .verse-nav {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding: 0 12px 0 12px;
 }
 
 .analysis {
-    padding: 10px;
+    padding: 12px;
 }
 
 .analysis .card p {
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .analysis .card span {
@@ -184,7 +196,7 @@ navigation {
     font-weight: bold;
     color: #cecef5;
 }
-  
+
 .analysis w[src] {
     border-bottom: dashed 1px var(--orange-color);
     color: var(--orange-color);
@@ -192,8 +204,8 @@ navigation {
 
 .analysis .lemma {
     color: var(--orange-color);
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 21px;
+    font-weight: bold;
 }
 
 note {
@@ -201,5 +213,5 @@ note {
 }
 
 @media only screen and (max-width: 768px) {
-    
+
 }

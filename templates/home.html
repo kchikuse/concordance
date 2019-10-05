@@ -16,22 +16,26 @@
     <div class="books">
       <ul>
         {foreach $books as $b}
-        <a book="{$b.id}" href="?book={$b.id}&chapter=1" {if $b.id eq $book.id} class="active" {/if}>
-          <li>{$b.name}</li>
-        </a>
+        <li>
+          <a book="{$b.id}" href="?book={$b.id}&chapter=1" {if $b.id eq $book.id} class="active" {/if}>
+            {$b.name}
+          </a>
+        </li>
         {/foreach}
       </ul>
     </div>
 
     <navigation>
       <div class="chapters">
-        <details>
+        <details open>
           <summary>CHAPTERS</summary>
           <ul>
             {foreach $chapters as $c}
-              <a href="?book={$book.id}&chapter={$c}" {if $c eq $chapter} class="active" {/if}>
-                <li>{$c}</li>
-              </a>
+              <li>
+                <a href="?book={$book.id}&chapter={$c}" {if $c eq $chapter} class="active" {/if}>
+                  {$c}
+                </a>
+            </li>
             {/foreach}
           </ul>
         </details>
