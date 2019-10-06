@@ -20,6 +20,7 @@ addEventListener("DOMContentLoaded", () => {
         }
 
         const sn = e.getAttribute("lemma");
+        
         if (sn) {
             details.removeAttribute("open");
             analysis.innerHTML = "LOADING...";

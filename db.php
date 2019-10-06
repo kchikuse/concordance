@@ -425,6 +425,56 @@ function getchapter($query) {
     return $chapter > $chapters ? $chapters : $chapter;
 }
 
+/* In the bref data, the books are not in the correct Biblical order, so do a lookup for the few faulty books. Also, the metadata for Gill wrongly sets Daniel to 33, but KD uses that same 33 to mean Ezekiel (26) so look for this double mixup too */
+function fixMetadata($version, $book) {
+    // 1 = John Gill's Exposition
+    // 2 = Keil & Delitzsch Commentary
+    // 3 = Matthew Henry's Commentary 
+
+    // the metadata for Gill sets Daniel as 33, which must be 27
+    if ($version == 1 && $book == 33) {
+        return 27;
+    }
+
+    $fixedData = [
+        19 => 17,
+        22 => 18,
+        23 => 19,
+        24 => 20,
+        25 => 21,
+        29 => 23,
+        30 => 24,
+        31 => 25,
+        33 => 26,
+        34 => 27,
+        35 => 28,
+        36 => 29,
+        37 => 30,
+        39 => 32,
+        40 => 33,
+        41 => 34,
+        42 => 35,
+        45 => 38,
+        46 => 39,
+        47 => 40,
+        48 => 41,
+        49 => 42,
+        50 => 43,
+        52 => 45,
+        53 => 46,
+        54 => 47,
+        56 => 49,
+        58 => 51,
+        65 => 58,
+        67 => 60,
+        68 => 61,
+        69 => 62,
+        73 => 66
+    ];
+
+    return array_key_exists($book, $fixedData) ? $fixedData[$book] : $book;
+}
+
 function bogus($value) {
     return !isset($value) || 
     is_null($value) || 

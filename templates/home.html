@@ -1,3 +1,5 @@
+{fetch file="css/style.css" assign="css"}
+{fetch file="app.js" assign="js"}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,8 +10,6 @@
   <title>Concordance</title>
   <meta name="theme-color" content="#418980">
   <link href="favicon.ico" rel="icon">
-  {fetch file="css/style.css" assign="css"}
-  {fetch file="app.js" assign="js"}
   <style>{$css|strip}</style>
 </head>
 <body>
@@ -19,7 +19,7 @@
       <ul>
         {foreach $books as $b}
         <li>
-          <a book="{$b.id}" href="?book={$b.id}&chapter=1"{if $b.id eq $book.id} class="active" {/if}>
+          <a href="?book={$b.id}&chapter=1"{if $b.id eq $book.id} class="active" {/if}>
             {$b.name}
           </a>
         </li>
@@ -32,21 +32,19 @@
         <details>
           <summary>CHAPTERS</summary>
           <ul>
-            {foreach $chapters as $c}
-              <li>
-                <a href="?book={$book.id}&chapter={$c}"{if $c eq $chapter} class="active" {/if}>
-                  {$c}
-                </a>
+          {foreach $chapters as $c}
+            <li>
+            <a href="?book={$book.id}&chapter={$c}"{if $c eq $chapter} class="active" {/if}>{$c}</a>
             </li>
-            {/foreach}
+          {/foreach}
           </ul>
         </details>
       </div>
       <div class="analysis"></div>
       <span class="verse-nav">
         {if $prev.book}
-          <a href="?book={$prev.book.id}&chapter={$prev.chapter}">
-            &larr; {$prev.book.name} {$prev.chapter}
+          <a href="?book={$prev.book.id}&chapter={$prev.chapter}">&larr; 
+            {$prev.book.name} {$prev.chapter}
           </a>
         {/if}
 
@@ -62,8 +60,8 @@
       <h1>{$book.name} {$chapter}</h1>
 
       {foreach $verses as $v}
-        {$junk = ['strong:', 'strongMorph:']}
-        <p><sup>{$v.verse}</sup> {$v.text|replace:$junk:''}</p>
+        {$prefixes = ['strong:', 'strongMorph:']}
+        <p><sup>{$v.verse}</sup> {$v.text|replace:$prefixes:''}</p>
       {/foreach}
     </div>
 
