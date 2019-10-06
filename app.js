@@ -1,33 +1,35 @@
 addEventListener("DOMContentLoaded", () => {
     const $ = e => document.querySelector(e);
+    const get = key => localStorage.getItem(key);
+    const set = (key, value) => localStorage.setItem(key, value);
     const analysis = $(".analysis");
     const details = $("details");
+    const books = $(".books");
 
     document.onclick = async event => {
         let e = event.target;
+        const items = ["w", "divinename"];
         const tag = e.tagName.toLowerCase();
 
-        if(["w", "divinename"].indexOf(tag) < 0) {
+        if (items.indexOf(tag) == -1) {
             return;
         }
 
-        if (tag == "divinename") {
+        if (tag == items[1]) {
             e = e.closest("w");
         }
 
-        const sn = e.hasAttribute("lemma") ?
-            e.getAttribute("lemma").split(":").pop() :
-            e.getAttribute("src");
-
-        if (!sn) return;
-
-        const response = await fetch(`sn/${sn}`);
-        analysis.innerHTML = await response.text();
-        details.removeAttribute("open");
+        const sn = e.getAttribute("lemma");
+        if (sn) {
+            details.removeAttribute("open");
+            analysis.innerHTML = "LOADING...";
+            const response = await fetch(`sn/${sn}`);
+            analysis.innerHTML = await response.text();
+        }
     };
 
-    (() => {
-        const book = new URLSearchParams(location.search).get("book");
-        $(".books").scrollTop = $(`[book="${book}"]`).offsetTop;
-    })();
+    details.ontoggle = e => set("open", e.target.open);
+    books.onclick = () => set("pos", books.scrollTop);
+    details.open = get("open") === String(true);
+    books.scrollTop = get("pos");
 });

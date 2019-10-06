@@ -128,7 +128,7 @@ function books() {
         [
             "id" => 22,
             "chapters" => 8,
-            "name" => "Song of songs"
+            "name" => "Song of Songs"
         ],
         [
             "id" => 23,

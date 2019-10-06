@@ -8,16 +8,18 @@
   <title>Concordance</title>
   <meta name="theme-color" content="#418980">
   <link href="favicon.ico" rel="icon">
-  <link href="favicon.ico" rel="apple-touch-icon">
-  <link href="assets/css/style.css" rel="stylesheet">
+  {fetch file="assets/css/style.css" assign="css"}
+  {fetch file="app.js" assign="js"}
+  <style>{$css|strip}</style>
 </head>
 <body>
+  {strip}
   <container>
     <div class="books">
       <ul>
         {foreach $books as $b}
         <li>
-          <a book="{$b.id}" href="?book={$b.id}&chapter=1" {if $b.id eq $book.id} class="active" {/if}>
+          <a book="{$b.id}" href="?book={$b.id}&chapter=1"{if $b.id eq $book.id} class="active" {/if}>
             {$b.name}
           </a>
         </li>
@@ -27,12 +29,12 @@
 
     <navigation>
       <div class="chapters">
-        <details open>
+        <details>
           <summary>CHAPTERS</summary>
           <ul>
             {foreach $chapters as $c}
               <li>
-                <a href="?book={$book.id}&chapter={$c}" {if $c eq $chapter} class="active" {/if}>
+                <a href="?book={$book.id}&chapter={$c}"{if $c eq $chapter} class="active" {/if}>
                   {$c}
                 </a>
             </li>
@@ -60,11 +62,13 @@
       <h1>{$book.name} {$chapter}</h1>
 
       {foreach $verses as $v}
-        <p><sup>{$v.verse}</sup> {$v.text}</p>
+        {$junk = ['strong:', 'strongMorph:']}
+        <p><sup>{$v.verse}</sup> {$v.text|replace:$junk:''}</p>
       {/foreach}
     </div>
 
   </container>
+  {/strip}
 </body>
-<script src="app.js"></script>
+<script>{$js|strip}</script>
 </html>

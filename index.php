@@ -26,6 +26,7 @@ Flight::route("GET /sn/@sn", function ($sn) {
 });
 
 Flight::register("view", "Smarty", array(), function ($smarty) {
+  $smarty->loadFilter("output", "trimwhitespace");
   $smarty->template_dir = "templates/";
   $smarty->compile_dir = "smarty/templates_c/";
   $smarty->config_dir = "smarty/config/";
