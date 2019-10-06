@@ -13,9 +13,11 @@ function verses($book, $chapter) {
 }
 
 function strongs($sn) {
-    $sn = str_replace("H0", "H", strtoupper($sn));
-
-    return R::findOne("lexicon", "number = ?", [$sn]);
+    $sn = strtoupper( trim($sn) );
+    $sn = str_replace("H0", "H", $sn);
+    $containsSpace = strpos($sn, " ") !== false;
+    $sn = $containsSpace ? explode(" ", $sn) : [ $sn ];
+    return R::find( 'lexicon', ' number IN (' . R::genSlots( $sn ) . ')', $sn);
 }
 
 function books() {
