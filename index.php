@@ -22,7 +22,7 @@ Flight::route("GET /", function () {
 });
 
 Flight::route("GET /sn/@sn", function ($sn) {
-  Flight::render("analysis.html", ["word" => strongs($sn)]);
+  Flight::render("analysis.html", ["words" => strongs($sn)]);
 });
 
 Flight::register("view", "Smarty", array(), function ($smarty) {

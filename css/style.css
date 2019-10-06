@@ -1,7 +1,7 @@
 @font-face {
     font-family: "Roboto Regular";
-    src: local("Roboto Regular"), url("assets/css/roboto-regular.ttf") format("ttf");
-    src: local("Roboto Regular"), url("assets/css/roboto-regular-webfont.woff2") format("woff2");
+    src: local("Roboto Regular"), url("css/roboto-regular.ttf") format("ttf");
+    src: local("Roboto Regular"), url("css/roboto-regular-webfont.woff2") format("woff2");
     font-style: normal;
     font-display: block;
     font-weight: 400;
@@ -184,6 +184,10 @@ divinename {
 
 .analysis {
     padding: 12px;
+}
+
+.analysis .card {
+    margin-bottom: 50px;
 }
 
 .analysis .card p {
