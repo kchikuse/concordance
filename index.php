@@ -9,8 +9,7 @@ Flight::route("GET /", function () {
   $book    = getbook(Flight::request()->query);
   $chapter = getchapter(Flight::request()->query);
 
-  Flight::render("home.html",
-  [
+  Flight::render("home.html", [
     "verses" => verses($book, $chapter),
     "next" => getnext($book, $chapter),
     "prev" => getprev($book, $chapter),

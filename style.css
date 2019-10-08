@@ -1,19 +1,11 @@
-@font-face {
-    font-family: "Roboto Regular";
-    src: local("Roboto Regular"), url("css/roboto-regular.ttf") format("ttf");
-    src: local("Roboto Regular"), url("css/roboto-regular-webfont.woff2") format("woff2");
-    font-style: normal;
-    font-display: block;
-    font-weight: 400;
-}
-
 :root {
-    --bg-color: #0b2a38;
-    --text-color: #a9a9b3;
+    --bg-color: #202223;
+    --text-color: #aca9a2;
     --orange-color: #e39963;
     --blu-color: #054061;
     --link-color: #66afd5;
     --light-grey: #383838;
+    --arrow-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23aca9a2" width="24" height="24" viewBox="0 0 24 24"><path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/></svg>');
 }
 
 *, :after, :before {
@@ -41,7 +33,7 @@ html {
 }
 
 body {
-    font-family: "Roboto Regular";
+    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, segoe ui, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     user-select: none;
@@ -56,7 +48,7 @@ container {
 
 navigation {
     display: grid;
-    grid-template-rows: 5vh 90vh 5vh;
+    grid-template-rows: 5vh 85vh 10vh;
 }
 
 divinename {
@@ -96,12 +88,10 @@ divinename {
 .books ul li a:hover {
     background-color: var(--light-grey);
     color: var(--orange-color);
-    font-weight: bold;
 }
 
 .books ul a, 
-.chapters ul a, 
-.verse-nav a {
+.chapters ul a {
     text-decoration: none;
     color: var(--link-color);
 }
@@ -112,8 +102,9 @@ divinename {
 }
 
 .verses p {
-    font-size: 105%;
-    margin-bottom: 12px;
+    font-size: 1em;
+    line-height: 2em;
+    margin-bottom: 7px;
 }
 
 .verses h1 {
@@ -123,7 +114,6 @@ divinename {
 .verses p sup, 
 .verses p w:hover, 
 .chapters a:hover, 
-.verse-nav a:hover, 
 .verses p divinename:hover {
     color: var(--orange-color);
 }
@@ -135,7 +125,7 @@ divinename {
 }
 
 .verses p transchange {
-    color: #e4dfde;
+    color: #eac1b9;
 }
 
 .chapters details {
@@ -177,9 +167,32 @@ divinename {
 
 .verse-nav {
     display: flex;
-    align-items: center;
     justify-content: space-around;
     text-transform: uppercase;
+    align-items: center;
+}
+
+.verse-nav a {
+    border: solid 1px var(--light-grey);
+    background-image: var(--arrow-icon);
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 50%;
+    visibility: hidden;
+    height: 70px;
+    width: 70px;
+}
+
+.verse-nav a[href] {
+    visibility: visible;
+}
+
+.verse-nav a:hover {
+    background-color: #33331a;
+}
+
+.verse-nav .prev {
+    transform: rotate(180deg);
 }
 
 .analysis {
@@ -198,20 +211,10 @@ divinename {
     font-size: 25px;
 }
 
-.analysis def {
+.analysis .card .lemma {
+    color: var(--orange-color);
     font-weight: bold;
-    color: #cecef5;
-}
-
-.analysis w[src] {
-    border-bottom: dashed 1px var(--orange-color);
-    color: var(--orange-color);
-}
-
-.analysis .lemma {
-    color: var(--orange-color);
     font-size: 21px;
-    font-weight: bold;
 }
 
 note {

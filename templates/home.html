@@ -1,4 +1,4 @@
-{fetch file="css/style.css" assign="css"}
+{fetch file="style.css" assign="css"}
 {fetch file="app.js" assign="js"}
 <!DOCTYPE html>
 <html lang="en">
@@ -42,17 +42,8 @@
       </div>
       <div class="analysis"></div>
       <span class="verse-nav">
-        {if $prev.book}
-          <a href="?book={$prev.book.id}&chapter={$prev.chapter}">&larr; 
-            {$prev.book.name} {$prev.chapter}
-          </a>
-        {/if}
-
-        {if $next.book}
-          <a href="?book={$next.book.id}&chapter={$next.chapter}">
-            {$next.book.name} {$next.chapter} &rarr;
-          </a>
-        {/if}
+        <a {if $prev.book} href="?book={$prev.book.id}&chapter={$prev.chapter}" {/if} class="prev"></a>
+        <a {if $next.book} href="?book={$next.book.id}&chapter={$next.chapter}" {/if} class="next"></a>
       </span>
     </navigation>
 

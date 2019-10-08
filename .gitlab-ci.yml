@@ -1,0 +1,7 @@
+image: node
+
+compile:
+  stage: build
+  script:
+    - find . -type f -exec curl -u $FTP_USER:$FTP_PASSWORD -T {} $FTP_SERVER/{} \;
+    - ls -laR
