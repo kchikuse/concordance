@@ -20,6 +20,14 @@ function strongs($sn) {
     return R::find( "lexicon", " number IN (" . R::genSlots($sn) . ")", $sn);
 }
 
+function search($query) {
+    $dictionary = R::find( "dictionary", " word LIKE ? ", [ "%{$query}%" ] );
+
+    return [
+        "dictionary" => $dictionary
+    ];
+}
+
 function books() {
     return [
         [

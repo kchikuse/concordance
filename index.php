@@ -24,6 +24,10 @@ Flight::route("GET /sn/@sn", function ($sn) {
   Flight::render("analysis.html", ["words" => strongs($sn)]);
 });
 
+Flight::route("GET /search/@query", function ($query) {
+  Flight::render("search.html", search($query));
+});
+
 Flight::register("view", "Smarty", array(), function ($smarty) {
   $smarty->loadFilter("output", "trimwhitespace");
   $smarty->template_dir = "templates/";

@@ -9,6 +9,7 @@
     --pale-blue: #eac1b9;
     --hashem-color: #98bacb;
     --arrow-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23aca9a2" width="24" height="24" viewBox="0 0 24 24"><path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/></svg>');
+    --search-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23aca9a2" width="25" height="25" viewBox="0 0 25 25" fill-rule="evenodd"><path d="M16.036 18.455l2.404-2.405 5.586 5.587-2.404 2.404zM8.5 2C12.1 2 15 4.9 15 8.5S12.1 15 8.5 15 2 12.1 2 8.5 4.9 2 8.5 2zm0-2C3.8 0 0 3.8 0 8.5S3.8 17 8.5 17 17 13.2 17 8.5 13.2 0 8.5 0zM15 16a1 1 0 1 1 2 0 1 1 0 1 1-2 0"></path></svg>');
 }
 
 *, :after, :before {
@@ -134,16 +135,34 @@ divinename {
 .search {
     display: flex;
     align-items: center;
-    padding-left: 3px;
+    padding: 3px;
 }
 
+.search label {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+  
+.search label:before {
+    content: "";
+    background: var(--search-icon) center / contain no-repeat;
+    position: absolute;
+    width: 20px;
+    left: 10px;
+    bottom: 0;
+    top: 0;
+}
+  
 .search input {
-    width: 70%;
-    height: 80%;
-    font-size: 15px;
+    width: 100%;
+    height: 100%;
+    font-size: 17px;
     background-color: #202223;
     border: solid 1px #535353;
     color: #c9c7c5;
+    padding: 5px;
+    padding-left: 40px;
     outline: 0;
 }
 
