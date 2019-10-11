@@ -28,6 +28,9 @@
     </div>
 
     <navigation>
+      <div class="search">
+        <input type="text" placeholder="Search...">
+      </div>
       <div class="chapters">
         <details>
           <summary>CHAPTERS</summary>
@@ -41,10 +44,10 @@
         </details>
       </div>
       <div class="analysis"></div>
-      <span class="verse-nav">
+      <div class="verse-nav">
         <a {if $prev.book} href="?book={$prev.book.id}&chapter={$prev.chapter}" {/if} class="prev"></a>
         <a {if $next.book} href="?book={$next.book.id}&chapter={$next.chapter}" {/if} class="next"></a>
-      </span>
+      </div>
     </navigation>
 
     <div class="verses">

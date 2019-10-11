@@ -17,7 +17,7 @@ function strongs($sn) {
     $sn = str_replace("H0", "H", $sn);
     $containsSpace = strpos($sn, " ") !== false;
     $sn = $containsSpace ? explode(" ", $sn) : [ $sn ];
-    return R::find( 'lexicon', ' number IN (' . R::genSlots( $sn ) . ')', $sn);
+    return R::find( "lexicon", " number IN (" . R::genSlots($sn) . ")", $sn);
 }
 
 function books() {

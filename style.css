@@ -5,6 +5,9 @@
     --blu-color: #054061;
     --link-color: #66afd5;
     --light-grey: #383838;
+    --dark-color: #100f0f;
+    --pale-blue: #eac1b9;
+    --hashem-color: #98bacb;
     --arrow-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23aca9a2" width="24" height="24" viewBox="0 0 24 24"><path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/></svg>');
 }
 
@@ -48,12 +51,12 @@ container {
 
 navigation {
     display: grid;
-    grid-template-rows: 5vh 85vh 10vh;
+    grid-template-rows: 5vh 5vh 85vh 5vh;
 }
 
 divinename {
     font-weight: bold;
-    color: #98bacb;
+    color: var(--hashem-color);
 }
 
 .books, 
@@ -125,8 +128,29 @@ divinename {
 }
 
 .verses p transchange {
-    color: #eac1b9;
+    color: var(--pale-blue);
 }
+
+.search {
+    display: flex;
+    align-items: center;
+    padding-left: 3px;
+}
+
+.search input {
+    width: 70%;
+    height: 80%;
+    font-size: 15px;
+    background-color: #202223;
+    border: solid 1px #535353;
+    color: #c9c7c5;
+    outline: 0;
+}
+
+.search input::placeholder { 
+    color: var(--text-color);
+    opacity: 0.7; 
+  }
 
 .chapters details {
     width: 25%;
@@ -134,7 +158,7 @@ divinename {
     max-height: 70%;
     cursor: pointer;
     position: absolute;
-    background-color: #100f0f;
+    background-color: var(--dark-color);
 }
 
 .chapters details summary {
@@ -173,14 +197,13 @@ divinename {
 }
 
 .verse-nav a {
-    border: solid 1px var(--light-grey);
     background-image: var(--arrow-icon);
     background-repeat: no-repeat;
     background-position: center;
     border-radius: 50%;
     visibility: hidden;
-    height: 70px;
-    width: 70px;
+    height: 50px;
+    width: 50px;
 }
 
 .verse-nav a[href] {
@@ -188,7 +211,7 @@ divinename {
 }
 
 .verse-nav a:hover {
-    background-color: #33331a;
+    background-color: var(--light-grey);
 }
 
 .verse-nav .prev {
@@ -205,6 +228,7 @@ divinename {
 
 .analysis .card p {
     margin-top: 12px;
+    line-height: 25px;
 }
 
 .analysis .card span {
