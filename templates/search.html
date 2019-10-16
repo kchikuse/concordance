@@ -1,5 +1,5 @@
 <li>
-{foreach $dictionary as $d}
-    <li>{$d.word} - {$d.description}</li>
+{foreach $kjv as $d}
+    <li>{$d.book}/{$d.chapter}/{$d.verse} - {$d.text}</li>
 {/foreach}
 </li>

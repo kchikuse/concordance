@@ -21,10 +21,10 @@ function strongs($sn) {
 }
 
 function search($query) {
-    $dictionary = R::find( "dictionary", " word LIKE ? ", [ "%{$query}%" ] );
+    $dictionary = R::find( "kjv", " text LIKE ? LIMIT 10", [ "%{$query}%" ] );
 
     return [
-        "dictionary" => $dictionary
+        "kjv" => $dictionary
     ];
 }
 

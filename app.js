@@ -40,9 +40,6 @@ addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    details.ontoggle = e => set("open", e.target.open);
-    details.open = get("open") === String(true);
-
     books.onclick = () => set("pos", books.scrollTop);
     books.scrollTop = get("pos");
 });

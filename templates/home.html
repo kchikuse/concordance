@@ -15,37 +15,37 @@
 <body>
   {strip}
   <container>
-    <div class="books">
-      <ul>
-        {foreach $books as $b}
-        <li>
-          <a href="?book={$b.id}&chapter=1"{if $b.id eq $book.id} class="active" {/if}>
-            {$b.name}
-          </a>
-        </li>
-        {/foreach}
-      </ul>
-    </div>
-
     <navigation>
       <div class="search">
         <label>
           <input id="search" type="text" placeholder="Search..." autocomplete="off">
         </label>
       </div>
-      <div class="chapters">
-        <details>
-          <summary>CHAPTERS</summary>
-          <ul>
-          {foreach $chapters as $c}
-            <li>
-            <a href="?book={$book.id}&chapter={$c}"{if $c eq $chapter} class="active" {/if}>{$c}</a>
-            </li>
-          {/foreach}
-          </ul>
-        </details>
-      </div>
+
+      <details class="books">
+        <summary>BOOKS</summary>
+        <ul>
+        {foreach $books as $b}
+          <li>
+            <a {if $b.id eq $book.id} class="active" {else} href="?book={$b.id}&chapter=1" {/if}>{$b.name}</a>
+          </li>
+        {/foreach}
+        </ul>
+      </details>
+
+      <details class="chapters">
+        <summary>CHAPTERS</summary>
+        <ul>
+        {foreach $chapters as $c}
+          <li>
+            <a {if $c eq $chapter} class="active" {else} href="?book={$book.id}&chapter={$c}" {/if}>{$c}</a>
+          </li>
+        {/foreach}
+        </ul>
+      </details>
+
       <div class="analysis"></div>
+      
       <div class="verse-nav">
         <a {if $prev.book} href="?book={$prev.book.id}&chapter={$prev.chapter}" {/if} class="prev"></a>
         <a {if $next.book} href="?book={$next.book.id}&chapter={$next.chapter}" {/if} class="next"></a>
