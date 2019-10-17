@@ -20,11 +20,14 @@ function strongs($sn) {
     return R::find( "lexicon", " number IN (" . R::genSlots($sn) . ")", $sn);
 }
 
-function search($query) {
-    $dictionary = R::find( "kjv", " text LIKE ? LIMIT 10", [ "%{$query}%" ] );
+function search($q) {
+    $easton = R::getAll(
+        "SELECT word, HIGHLIGHT(easton, 1, '<mark>', '</mark>') AS description FROM easton(:q) ORDER BY rank LIMIT 12",
+        array(":q" => $q)
+    );
 
     return [
-        "kjv" => $dictionary
+        "easton" => $easton
     ];
 }
 
@@ -433,7 +436,11 @@ function getchapter($query) {
     return $chapter > $chapters ? $chapters : $chapter;
 }
 
-/* In the bref data, the books are not in the correct Biblical order, so do a lookup for the few faulty books. Also, the metadata for Gill wrongly sets Daniel to 33, but KD uses that same 33 to mean Ezekiel (26) so look for this double mixup too */
+/* 
+In the bref metadata, the books are not in the correct Biblical order, 
+so do a lookup for the few faulty books. 
+Also, the metadata for JG wrongly sets Daniel to 33, but KD uses 
+that same 33 to mean Ezekiel (26), so this fixes that as well */
 function fixMetadata($version, $book) {
     // 1 = John Gill's Exposition
     // 2 = Keil & Delitzsch Commentary

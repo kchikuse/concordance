@@ -1,5 +1,5 @@
-<li>
-{foreach $kjv as $d}
-    <li>{$d.book}/{$d.chapter}/{$d.verse} - {$d.text}</li>
-{/foreach}
-</li>
+<ul class="search-results">
+    {foreach $easton as $d}
+    <li><span>{$d.word}</span> - {$d.description}</li>
+    {/foreach}
+</ul>

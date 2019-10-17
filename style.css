@@ -1,13 +1,12 @@
 :root {
-    --bg-color: #202223;
-    --text-color: #aca9a2;
-    --orange-color: #e39963;
-    --blu-color: #054061;
-    --link-color: #66afd5;
-    --light-grey: #383838;
-    --dark-color: #100f0f;
-    --pale-blue: #eac1b9;
-    --hashem-color: #98bacb;
+    --bg: #202223;
+    --text: #aca9a2;
+    --blue: #66afd5;
+    --grey: #383838;
+    --dark: #100f0f;
+    --pink: #dca8a8;
+    --orange: #e39963;
+    --pale-orange: #eac1b9;
     --arrow-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23aca9a2" width="24" height="24" viewBox="0 0 24 24"><path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"/></svg>');
     --search-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23aca9a2" width="25" height="25" viewBox="0 0 25 25" fill-rule="evenodd"><path d="M16.036 18.455l2.404-2.405 5.586 5.587-2.404 2.404zM8.5 2C12.1 2 15 4.9 15 8.5S12.1 15 8.5 15 2 12.1 2 8.5 4.9 2 8.5 2zm0-2C3.8 0 0 3.8 0 8.5S3.8 17 8.5 17 17 13.2 17 8.5 13.2 0 8.5 0zM15 16a1 1 0 1 1 2 0 1 1 0 1 1-2 0"></path></svg>');
 }
@@ -25,11 +24,11 @@
 }
 
 ::-moz-selection {
-    background-color: var(--orange-color);
+    background-color: var(--orange);
 }
 
 ::selection {
-    background-color: var(--orange-color);
+    background-color: var(--orange);
 }
 
 html {
@@ -38,8 +37,8 @@ html {
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, segoe ui, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: var(--bg);
+    color: var(--text);
     user-select: none;
     font-size: 16px;
 }
@@ -57,7 +56,7 @@ navigation {
 
 divinename {
     font-weight: bold;
-    color: var(--hashem-color);
+    color: #98bacb;
 }
 
 .books, 
@@ -71,7 +70,7 @@ divinename {
 .verses {
     padding: 12px;
     overflow-y: auto;
-    border-left: solid 2px var(--light-grey);
+    border-left: solid 2px var(--grey);
 }
 
 .verses p {
@@ -84,8 +83,11 @@ divinename {
     margin-bottom: 20px;
 }
 
-.verses p sup, .verses p w:hover, .chapters a:hover, .verses p divinename:hover {
-    color: var(--orange-color);
+.verses p sup, 
+.verses p w:hover, 
+.chapters a:hover, 
+.verses p divinename:hover {
+    color: var(--orange);
 }
 
 .verses p w {
@@ -95,13 +97,12 @@ divinename {
 }
 
 .verses p transchange {
-    color: var(--pale-blue);
+    color: var(--pale-orange);
 }
 
 .search {
     display: flex;
     align-items: center;
-    padding: 3px;
 }
 
 .search label {
@@ -114,6 +115,7 @@ divinename {
     content: "";
     background: var(--search-icon) center / contain no-repeat;
     position: absolute;
+    opacity: 0.5;
     width: 20px;
     left: 10px;
     bottom: 0;
@@ -127,28 +129,32 @@ divinename {
     background-color: #202223;
     border: solid 1px #535353;
     color: #c9c7c5;
-    padding: 5px;
     padding-left: 40px;
     outline: 0;
 }
 
 .search input::placeholder {
-    color: var(--text-color);
+    color: var(--text);
     opacity: 0.7;
+}
+
+.search input::-webkit-search-cancel-button {
+    position: relative;
+    right: 20px;
 }
 
 details {
     width: 100%;
     max-height: 70%;
     cursor: pointer;
-    background-color: var(--dark-color);
+    background-color: var(--dark);
 }
 
 details summary {
     padding: 10px;
     outline: none;
     font-weight: bold;
-    background-color: var(--dark-color);
+    background-color: var(--dark);
 }
 
 details ul {
@@ -156,31 +162,31 @@ details ul {
     width: 40%;
     list-style: none;
     position: absolute;
-    border-top: solid 1px var(--light-grey);
+    border-top: solid 1px var(--grey);
 }
 
 details ul li {
     text-align: center;
-    background-color: var(--dark-color);
-    border: solid 1px var(--light-grey);
+    background-color: var(--dark);
+    border: solid 1px var(--grey);
     border-left: none;
     border-top: none;
     font-weight: 600;
 }
 
 details ul .active {
-    color: var(--orange-color);
+    color: var(--orange);
 }
 
 details ul .active, 
 details ul li a:hover {
-    background-color: var(--light-grey);
+    background-color: var(--grey);
 }
 
 details ul li a {
     display: block;
     text-decoration: none;
-    color: var(--link-color);
+    color: var(--blue);
     padding: 12px;
 }
 
@@ -225,7 +231,7 @@ details ul li a {
 }
 
 .verse-nav a:hover {
-    background-color: var(--light-grey);
+    background-color: var(--grey);
 }
 
 .verse-nav .prev {
@@ -234,6 +240,7 @@ details ul li a {
 
 .analysis {
     padding: 12px;
+    overflow-y: auto;
 }
 
 .analysis .card {
@@ -250,9 +257,36 @@ details ul li a {
 }
 
 .analysis .card .lemma {
-    color: var(--orange-color);
+    color: var(--orange);
     font-weight: bold;
     font-size: 21px;
+}
+
+.analysis .search-results {
+    line-height: 1.5;
+}
+
+.analysis .search-results li {
+    margin-bottom: 15px;
+}
+
+.analysis .search-results mark {
+    background-color: transparent;
+    color: var(--orange); 
+}
+
+.analysis .search-results reflink {
+    color: var(--pink);
+}
+
+loading,
+.analysis .search-results span,
+.analysis .search-results mark {
+    font-weight: 600;
+}
+
+loading:before {
+    content: "LOADING...";
 }
 
 note {
@@ -260,5 +294,5 @@ note {
 }
 
 @media only screen and (min-width: 1024px) {
-
+    
 }

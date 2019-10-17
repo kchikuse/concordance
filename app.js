@@ -1,13 +1,10 @@
 addEventListener("DOMContentLoaded", () => {
-    const $ = e => document.querySelector(e);
-    const get = key => localStorage.getItem(key);
-    const set = (key, value) => localStorage.setItem(key, value);
-    const analysis = $(".analysis");
-    const details = $("details");
-    const search = $("#search");
-    const books = $(".books");
-    
-    document.onclick = async event => {
+    const isblank = e => !e || e.trim().length == 0;
+    const details = document.querySelectorAll("details");
+    const analysis = document.querySelector(".analysis");
+    const search = document.querySelector("#search");
+
+    document.onclick = event => {
         let e = event.target;
         const items = ["w", "divinename"];
         const tag = e.tagName.toLowerCase();
@@ -21,25 +18,42 @@ addEventListener("DOMContentLoaded", () => {
         }
 
         const sn = e.getAttribute("lemma");
-        
-        if (sn) {
-            details.removeAttribute("open");
-            analysis.innerHTML = "LOADING...";
-            const response = await fetch(`sn/${sn}`);
-            analysis.innerHTML = await response.text();
-        }
+        if (isblank(sn)) return;
+        load(`sn/${sn}`);
     };
 
-    search.onkeypress = async e => {
-        if(e.keyCode == 13) {
-            const query = e.target.value;
-            if(query.trim().length == 0) return;
-            const response = await fetch(`search/${query}`);
-            const results = await response.text();
-            console.log(results);
+    search.onsearch = () => {
+        const q = search.value;
+
+        if (isblank(q)) {
+            clear();
+            return;
         }
+
+        load("search/" + q);
+        localStorage.setItem("q", q);
     };
 
-    books.onclick = () => set("pos", books.scrollTop);
-    books.scrollTop = get("pos");
+    search.onkeyup = e => {
+        if(isblank(e.target.value)) clear();
+    };
+
+    const clear = () => {
+        localStorage.removeItem("q");
+        analysis.innerHTML = "";
+    };
+
+    const load = async url => {
+        analysis.innerHTML = "<loading/>";
+        const response = await fetch(url);
+        analysis.innerHTML = await response.text();
+        details.forEach(e => e.removeAttribute("open"));
+    };
+
+    (() => {
+        const q = localStorage.getItem("q");
+        if (!q) return;
+        search.value = q;
+        search.onsearch();
+    })();
 });
