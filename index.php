@@ -8,6 +8,7 @@ require "db.php";
 Flight::route("GET /", function () {
   $book    = getbook(Flight::request()->query);
   $chapter = getchapter(Flight::request()->query);
+  $verse = getverse(Flight::request()->query);
 
   Flight::render("home.html", [
     "verses" => verses($book, $chapter),
@@ -15,17 +16,23 @@ Flight::route("GET /", function () {
     "prev" => getprev($book, $chapter),
     "chapters" => chapters($book),
     "chapter" => $chapter,
+    "verse" => $verse,
     "book" => book($book),
     "books" => books()
   ]);
 });
 
 Flight::route("GET /sn/@sn", function ($sn) {
-  Flight::render("analysis.html", ["words" => strongs($sn)]);
+  Flight::render("analysis.html", [
+    "links" => strongs_links($sn),
+    "words" => strongs($sn)
+  ]);
 });
 
 Flight::route("GET /search/@query", function ($query) {
-  Flight::render("search.html", search($query));
+  Flight::render("search.html", [
+    "easton" => easton($query)
+  ]);
 });
 
 Flight::register("view", "Smarty", array(), function ($smarty) {

@@ -1,5 +1,5 @@
 addEventListener("DOMContentLoaded", () => {
-    const isblank = e => !e || e.trim().length == 0;
+    const blank = e => !e || e.trim().length == 0;
     const details = document.querySelectorAll("details");
     const analysis = document.querySelector(".analysis");
     const search = document.querySelector("#search");
@@ -18,42 +18,26 @@ addEventListener("DOMContentLoaded", () => {
         }
 
         const sn = e.getAttribute("lemma");
-        if (isblank(sn)) return;
+        if (blank(sn)) return;
         load(`sn/${sn}`);
     };
 
     search.onsearch = () => {
         const q = search.value;
-
-        if (isblank(q)) {
-            clear();
-            return;
-        }
-
+        if (blank(q)) return;
         load("search/" + q);
-        localStorage.setItem("q", q);
-    };
-
-    search.onkeyup = e => {
-        if(isblank(e.target.value)) clear();
-    };
-
-    const clear = () => {
-        localStorage.removeItem("q");
-        analysis.innerHTML = "";
     };
 
     const load = async url => {
         analysis.innerHTML = "<loading/>";
         const response = await fetch(url);
-        analysis.innerHTML = await response.text();
+        const html = await response.text();
+        analysis.innerHTML = html;
         details.forEach(e => e.removeAttribute("open"));
+        localStorage.setItem("q", html);
     };
 
     (() => {
-        const q = localStorage.getItem("q");
-        if (!q) return;
-        search.value = q;
-        search.onsearch();
+        analysis.innerHTML = localStorage.getItem("q") || "";
     })();
 });

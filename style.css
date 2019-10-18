@@ -100,6 +100,11 @@ divinename {
     color: var(--pale-orange);
 }
 
+.verses p.searched {
+    color: var(--orange);
+    font-weight: 700;
+}
+
 .search {
     display: flex;
     align-items: center;
@@ -244,7 +249,7 @@ details ul li a {
 }
 
 .analysis .card {
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 .analysis .card p {
@@ -283,6 +288,29 @@ loading,
 .analysis .search-results span,
 .analysis .search-results mark {
     font-weight: 600;
+}
+
+.analysis .strong-links {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    max-height: 400px;
+    width: 100%;
+}
+
+.analysis .strong-links a {
+    display: block;
+    border: solid 1px var(--grey);
+    text-decoration: none;
+    color: var(--blue);
+    padding: 2px 4px;
+    margin: 3px;
+}
+
+.analysis .strong-links a:hover {
+    background-color: var(--grey);
+    color: var(--orange);
 }
 
 loading:before {

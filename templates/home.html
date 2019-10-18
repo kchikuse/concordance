@@ -18,7 +18,7 @@
     <navigation>
       <div class="search">
         <label>
-          <input id="search" type="search" placeholder="Search dictionary..." autocomplete="off">
+          <input id="search" type="search" placeholder="Search..." autocomplete="off">
         </label>
       </div>
 
@@ -27,7 +27,7 @@
         <ul>
         {foreach $books as $b}
           <li>
-            <a {if $b.id eq $book.id} class="active" {else} href="?book={$b.id}&chapter=1" {/if}>{$b.name}</a>
+            <a href="?book={$b.id}&chapter=1" {if $b.id eq $book.id} class="active" {/if}>{$b.name}</a>
           </li>
         {/foreach}
         </ul>
@@ -57,7 +57,7 @@
 
       {foreach $verses as $v}
         {$prefixes = ['strong:', 'strongMorph:']}
-        <p><sup>{$v.verse}</sup> {$v.text|replace:$prefixes:''}</p>
+        <p {if $v.verse eq $verse} class="searched" {/if}><sup>{$v.verse}</sup> {$v.text|replace:$prefixes:''}</p>
       {/foreach}
     </div>
 

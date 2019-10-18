@@ -1,14 +1,16 @@
 <?php
 
-R::setup("sqlite:bible.sqlite");
+R::setup("mysql:host=localhost;dbname=bible","root","root");
+
+R::debug( FALSE );
 
 function verses($book, $chapter) {
     return R::getAll(
         "SELECT * FROM kjv WHERE book = :book AND chapter = :chapter",
-        array(
+        [
             ":book" => $book,
             ":chapter" => $chapter
-        )
+        ]
     );
 }
 
@@ -20,15 +22,41 @@ function strongs($sn) {
     return R::find( "lexicon", " number IN (" . R::genSlots($sn) . ")", $sn);
 }
 
-function search($q) {
-    $easton = R::getAll(
-        "SELECT word, HIGHLIGHT(easton, 1, '<mark>', '</mark>') AS description FROM easton(:q) ORDER BY rank LIMIT 12",
-        array(":q" => $q)
+function strongs_links($sn) {
+    $sn = strtoupper(trim($sn));
+
+    $rows = R::getAll(
+        "SELECT book, chapter, verse, 
+        MATCH (text) AGAINST (:q) AS score 
+        FROM kjv 
+        HAVING score > 7 
+        ORDER BY book ASC",
+        [":q" => "strong:${sn}"]
     );
 
-    return [
-        "easton" => $easton
-    ];
+    foreach ($rows as & $row ) {
+        $row["name"] = getShortName($row["book"]);
+    }
+
+    return $rows;
+}
+
+function easton($q) {
+    $rows = R::getAll(
+        "SELECT word, description, 
+        MATCH (word, description) AGAINST (:q) AS score 
+        FROM easton 
+        HAVING score > 1 
+        ORDER BY score DESC 
+        LIMIT 1, 12",
+        [":q" => $q]
+    );
+
+    foreach ($rows as & $row ) {
+        $row["description"] = hilite($row["description"], $q);
+    }
+
+    return $rows;
 }
 
 function books() {
@@ -436,6 +464,19 @@ function getchapter($query) {
     return $chapter > $chapters ? $chapters : $chapter;
 }
 
+function getverse($query) {
+    $verse = $query->verse;
+    if (bogus($verse)) return 1;
+    return $verse;
+}
+
+function getShortName($bookid) {
+    $book = book($bookid);
+    $name = $book["name"];
+    $max = is_numeric($name[0]) ? 5 : 3;
+    return substr($name, 0, $max);
+}
+
 /* 
 In the bref metadata, the books are not in the correct Biblical order, 
 so do a lookup for the few faulty books. 
@@ -451,7 +492,7 @@ function fixMetadata($version, $book) {
         return 27;
     }
 
-    $fixedData = [
+    $fixed = [
         19 => 17,
         22 => 18,
         23 => 19,
@@ -487,7 +528,21 @@ function fixMetadata($version, $book) {
         73 => 66
     ];
 
-    return array_key_exists($book, $fixedData) ? $fixedData[$book] : $book;
+    return array_key_exists($book, $fixed) ? $fixed[$book] : $book;
+}
+
+function hilite($content, $q) {
+    $needles = explode(" ", $q);
+    $content = stripslashes(strip_tags($content));
+
+    foreach ($needles as $key) {
+        $position = stripos($content, $key);
+        if(bogus($position)) continue;
+        $original = substr($content, $position, strlen($key));
+        $content = str_replace($original, "<match>" . $original . "</match>", $content);
+    }
+    
+    return str_replace("match>", "mark>", $content); 
 }
 
 function bogus($value) {

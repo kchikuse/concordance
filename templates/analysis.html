@@ -1,27 +1,37 @@
 {strip}
-  {foreach $words as $word}
-    <div class="card">
-      <span>{$word.number}</span>
 
-      <p class="lemma">
-        <b>{$word.lemma}</b>
-      </p>
+{foreach $words as $word}
+<div class="card">
+  <span>{$word.number}</span>
 
-      {if $word.translit}
-      <p><i>{$word.translit}</i></p>
-      {/if}
+  <p class="lemma">
+    <b>{$word.lemma}</b>
+  </p>
 
-      {if $word.pron}
-      <p><i>{$word.pron}</i></p>
-      {/if}
+  {if $word.translit}
+  <p><i>{$word.translit}</i></p>
+  {/if}
 
-      <p>{$word.derivation}</p>
-      <p>{$word.strongs_def}</p>
-      <p>{$word.kjv_def}</p>
+  {if $word.pron}
+  <p><i>{$word.pron}</i></p>
+  {/if}
 
-      {if $word.xlit}
-      <p>{$word.xlit}</p>
-      {/if}
-    </div>
+  <p>{$word.derivation}</p>
+  <p>{$word.strongs_def}</p>
+  <p>{$word.kjv_def}</p>
+
+  {if $word.xlit}
+  <p>{$word.xlit}</p>
+  {/if}
+</div>
+{/foreach}
+
+<div class="strong-links">
+  {foreach $links as $lnk}
+  <a href="?book={$lnk.book}&chapter={$lnk.chapter}&verse={$lnk.verse}">
+    {$lnk.name} {$lnk.chapter}:{$lnk.verse}
+  </a>
   {/foreach}
+</div>
+
 {/strip}
