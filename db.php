@@ -29,8 +29,8 @@ function strongs_links($sn) {
         "SELECT book, chapter, verse, 
         MATCH (text) AGAINST (:q) AS score 
         FROM kjv 
-        HAVING score > 7 
-        ORDER BY book ASC",
+        HAVING score > 1 
+        ORDER BY score DESC",
         [":q" => "strong:${sn}"]
     );
 
