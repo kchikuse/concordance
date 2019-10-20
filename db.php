@@ -1,6 +1,6 @@
 <?php
 
-R::setup("mysql:host=localhost;dbname=bible","root","root");
+R::setup("mysql:host=localhost;dbname=bible","foo","bar");
 
 R::debug( FALSE );
 
@@ -464,15 +464,10 @@ function getchapter($query) {
     return $chapter > $chapters ? $chapters : $chapter;
 }
 
-function getverse($query) {
-    $verse = $query->verse;
-    if (bogus($verse)) return 1;
-    return $verse;
-}
-
 function getShortName($bookid) {
     $book = book($bookid);
     $name = $book["name"];
+    //return $name;
     $max = is_numeric($name[0]) ? 5 : 3;
     return substr($name, 0, $max);
 }

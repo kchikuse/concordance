@@ -44,11 +44,15 @@
         </ul>
       </details>
 
-      <div class="analysis"></div>
+      <div class="analysis">
+       
+      </div>
       
       <div class="verse-nav">
-        <a {if $prev.book} href="?book={$prev.book.id}&chapter={$prev.chapter}" {/if} class="prev"></a>
-        <a {if $next.book} href="?book={$next.book.id}&chapter={$next.chapter}" {/if} class="next"></a>
+        <a {if $prev.book} href="?book={$prev.book.id}&chapter={$prev.chapter}" {/if}>
+        <arrow left></arrow></a>
+        <a {if $next.book} href="?book={$next.book.id}&chapter={$next.chapter}" {/if}>
+        <arrow right></arrow></a>
       </div>
     </navigation>
 
@@ -57,11 +61,17 @@
 
       {foreach $verses as $v}
         {$prefixes = ['strong:', 'strongMorph:']}
-        <p {if $v.verse eq $verse} class="searched" {/if}><sup>{$v.verse}</sup> {$v.text|replace:$prefixes:''}</p>
+        <p><sup>{$v.verse}</sup> {$v.text|replace:$prefixes:''}</p>
       {/foreach}
     </div>
 
   </container>
+  <style>
+    w[lemma="{$sn}"],
+    w[lemma="strong:{$sn}"] {
+      border-bottom: solid 2px var(--orange);
+    }
+    </style>
   {/strip}
 </body>
 <script>{$js|strip}</script>

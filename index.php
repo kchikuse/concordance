@@ -6,9 +6,9 @@ require "rb.php";
 require "db.php";
 
 Flight::route("GET /", function () {
-  $book    = getbook(Flight::request()->query);
-  $chapter = getchapter(Flight::request()->query);
-  $verse = getverse(Flight::request()->query);
+  $query = Flight::request()->query;
+  $book = getbook($query);
+  $chapter = getchapter($query);
 
   Flight::render("home.html", [
     "verses" => verses($book, $chapter),
@@ -16,16 +16,17 @@ Flight::route("GET /", function () {
     "prev" => getprev($book, $chapter),
     "chapters" => chapters($book),
     "chapter" => $chapter,
-    "verse" => $verse,
     "book" => book($book),
-    "books" => books()
+    "books" => books(),
+    "sn" => $query->sn
   ]);
 });
 
 Flight::route("GET /sn/@sn", function ($sn) {
   Flight::render("analysis.html", [
     "links" => strongs_links($sn),
-    "words" => strongs($sn)
+    "words" => strongs($sn),
+    "sn" => $sn
   ]);
 });
 

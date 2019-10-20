@@ -4,20 +4,20 @@ addEventListener("DOMContentLoaded", () => {
     const analysis = document.querySelector(".analysis");
     const search = document.querySelector("#search");
 
-    document.onclick = event => {
-        let e = event.target;
-        const items = ["w", "divinename"];
-        const tag = e.tagName.toLowerCase();
+    document.onclick = e => {
+        let item = e.target;
+        const tags = ["w", "divinename"];
+        const tag = item.tagName.toLowerCase();
 
-        if (items.indexOf(tag) == -1) {
+        if (tags.indexOf(tag) == -1) {
             return;
         }
 
-        if (tag == items[1]) {
-            e = e.closest("w");
+        if (tag == tags[1]) {
+            item = item.closest("w");
         }
 
-        const sn = e.getAttribute("lemma");
+        const sn = item.getAttribute("lemma");
         if (blank(sn)) return;
         load(`sn/${sn}`);
     };
@@ -29,15 +29,13 @@ addEventListener("DOMContentLoaded", () => {
     };
 
     const load = async url => {
-        analysis.innerHTML = "<loading/>";
+        analysis.innerHTML = "LOADING...";
         const response = await fetch(url);
-        const html = await response.text();
-        analysis.innerHTML = html;
+        analysis.innerHTML = await response.text();
         details.forEach(e => e.removeAttribute("open"));
-        localStorage.setItem("q", html);
     };
 
     (() => {
-        analysis.innerHTML = localStorage.getItem("q") || "";
+        load("sn/H04428");
     })();
 });
