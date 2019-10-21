@@ -1,19 +1,21 @@
 {strip}
 
+{if $links}
 <div class="strong-links">
-  <details open>
+  <details>
     <summary>OTHER USES</summary>
     <ul>
       {foreach $links as $lnk}
       <li>
         <a href="?book={$lnk.book}&chapter={$lnk.chapter}&sn={$sn}">
-          {$lnk.name} {$lnk.chapter}:{$lnk.verse}
+          {$lnk.book|book_name} {$lnk.chapter}
         </a>
       </li>
       {/foreach}
     </ul>
   </details>
 </div>
+{/if}
 
 {foreach $words as $word}
 <div class="card">
@@ -40,4 +42,5 @@
   {/if}
 </div>
 {/foreach}
+
 {/strip}

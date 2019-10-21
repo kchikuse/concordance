@@ -24,21 +24,33 @@ function strongs($sn) {
 
 function strongs_links($sn) {
     $sn = strtoupper(trim($sn));
+    $sn = explode(" ", $sn);
+    $sn = substr_replace($sn, "strong:", 0, 0);
+    $sn  =implode(" ", $sn);
 
     $rows = R::getAll(
-        "SELECT book, chapter, verse, 
+        "SELECT book, chapter, 
         MATCH (text) AGAINST (:q) AS score 
         FROM kjv 
         HAVING score > 1 
-        ORDER BY score DESC",
-        [":q" => "strong:${sn}"]
+        ORDER BY score DESC 
+        LIMIT 0, 40",
+        [":q" => $sn]
     );
 
-    foreach ($rows as & $row ) {
-        $row["name"] = getShortName($row["book"]);
+    $results = [];
+
+    foreach ($rows as $row) {
+        $exists = array_filter($results, function ($e) use ($row) {
+           return $e["book"] == $row["book"] && $e["chapter"] == $row["chapter"];
+        });
+
+        if (empty($exists)) {
+            $results[] = $row;
+        }
     }
 
-    return $rows;
+    return $results;
 }
 
 function easton($q) {
@@ -424,7 +436,7 @@ function getnext($book, $chapter) {
     }
 
     return [
-        "book" => book($nextbook), 
+        "book" => $nextbook, 
         "chapter" => $nextchapter 
     ];
 }
@@ -444,7 +456,7 @@ function getprev($book, $chapter) {
     }
 
     return [
-        "book" => book($prevbook), 
+        "book" => $prevbook, 
         "chapter" => $prevchapter 
     ];
 }
@@ -464,12 +476,14 @@ function getchapter($query) {
     return $chapter > $chapters ? $chapters : $chapter;
 }
 
-function getShortName($bookid) {
-    $book = book($bookid);
-    $name = $book["name"];
-    //return $name;
-    $max = is_numeric($name[0]) ? 5 : 3;
-    return substr($name, 0, $max);
+function getAbsoluteUrl() {
+    $url =  sprintf("%s://%s%s",
+        isset($_SERVER["HTTPS"]) ? "https" : "http",
+        $_SERVER["HTTP_HOST"],
+        $_SERVER["REQUEST_URI"]
+    );
+
+    return strtok($url, "?");
 }
 
 /* 
@@ -545,4 +559,14 @@ function bogus($value) {
     is_null($value) || 
     !is_numeric($value) || 
     $value < 1;
+}
+
+
+/** Smarty functions **/
+function book_name($params) {
+    return book($params)["name"];
+}
+
+function remove_prefix($params) {
+    return str_replace(["strong:", "strongMorph:"], "", $params);
 }

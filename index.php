@@ -5,20 +5,22 @@ require "flight/Flight.php";
 require "rb.php";
 require "db.php";
 
+define("APP_URL", getAbsoluteUrl());
+
 Flight::route("GET /", function () {
   $query = Flight::request()->query;
   $book = getbook($query);
   $chapter = getchapter($query);
 
   Flight::render("home.html", [
+    "sn" => $query->sn,
+    "book" => $book,
+    "books" => books(),
+    "chapter" => $chapter,
+    "chapters" => chapters($book),
     "verses" => verses($book, $chapter),
     "next" => getnext($book, $chapter),
-    "prev" => getprev($book, $chapter),
-    "chapters" => chapters($book),
-    "chapter" => $chapter,
-    "book" => book($book),
-    "books" => books(),
-    "sn" => $query->sn
+    "prev" => getprev($book, $chapter)
   ]);
 });
 

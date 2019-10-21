@@ -145,11 +145,8 @@ divinename {
 }
 
 details {
-    width: 100%;
-    max-height: 70%;
     cursor: pointer;
     margin-bottom: 10px;
-    background-color: var(--dark);
 }
 
 details summary {
@@ -205,7 +202,7 @@ details summary::-webkit-details-marker {
     grid-template-rows: repeat(auto-fit, minmax(50px, 1fr));
     grid-auto-flow: column;
     height: 80%;
-    width: 51%;
+    width: 53%;
     z-index: 3;
 }
 
@@ -231,6 +228,8 @@ details summary::-webkit-details-marker {
 .verse-nav arrow {
     height: 15px;
     width: 15px;
+    border: solid var(--text);
+    border-width: 0 3px 3px 0;
 }
 
 .verse-nav a[href] {
@@ -261,73 +260,52 @@ details summary::-webkit-details-marker {
     font-size: 21px;
 }
 
-.analysis .search-results {
+.search-results {
     line-height: 1.5;
     list-style: none;
+    padding: 12px;
 }
 
-.analysis .search-results li {
+.search-results li {
     margin-bottom: 15px;
 }
 
-.analysis .search-results mark {
+.search-results mark {
     background-color: transparent;
     color: var(--orange); 
 }
 
-.analysis .search-results reflink {
+.search-results reflink {
     color: var(--pink);
 }
 
-.analysis .search-results span,
-.analysis .search-results mark {
+.search-results span,
+.search-results mark {
     font-weight: 600;
 }
 
 .strong-links ul {
-    column-count: 3;
-    height: 80%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    font-size: 14px;
     width: 25%;
-    z-index: 3;
 }
 
 .strong-links ul li {
-    padding: 5px;
-    font-size: 14px;
+    text-align: left;
+    padding-left: 12px;
 }
 
 .strong-links a {
     display: block;
-    border: solid 1px var(--grey);
-    text-decoration: none;
-    color: var(--blue);
-    padding: 2px 4px;
-    margin: 3px;
 }
 
 .strong-links a:hover {
-    background-color: var(--grey);
     color: var(--orange);
 }
 
-.strong-links details {
-    /* background-color: var(--bg); */
-}
-
-.strong-links summary {
-    /* background-color: var(--bg);
-    font-weight: normal;
-    color: var(--blue);
-    padding-left: 0; */
-}
-
-.strong-links a {
-    border: none;
-    display: inline-block;
-}
-
-.strong-links a:hover arrow {
-    border-color: var(--orange);
+note {
+    display: none;
 }
 
 arrow {
@@ -335,26 +313,18 @@ arrow {
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;
-}
-  
+} 
 arrow[right] {
     transform: rotate(-45deg);
 }
-
 arrow[left] {
     transform: rotate(135deg);
 }
-
 arrow[up] {
     transform: rotate(-135deg);
 }
-
 arrow[down] {
     transform: rotate(45deg);
-}
-
-note {
-    display: none;
 }
 
 @media only screen and (min-width: 1024px) {   

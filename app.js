@@ -24,7 +24,12 @@ addEventListener("DOMContentLoaded", () => {
 
     search.onsearch = () => {
         const q = search.value;
-        if (blank(q)) return;
+        
+        if (blank(q)) {
+            analysis.innerHTML = "";
+            return;
+        }
+
         load("search/" + q);
     };
 
@@ -34,8 +39,4 @@ addEventListener("DOMContentLoaded", () => {
         analysis.innerHTML = await response.text();
         details.forEach(e => e.removeAttribute("open"));
     };
-
-    (() => {
-        load("sn/H04428");
-    })();
 });
