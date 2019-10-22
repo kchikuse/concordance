@@ -27,7 +27,9 @@
         <ul>
         {foreach $books as $b}
           <li>
-            <a href="?book={$b.id}&chapter=1" {if $b.id eq $book} class="active" {/if}>{$b.id|book_name}</a>
+            <a href="?book={$b.id}&chapter=1" {if $b.id eq $book} class="active" {/if}>
+              {$b.id|name}<sup>{$b.id}</sup>
+            </a>
           </li>
         {/foreach}
         </ul>
@@ -46,20 +48,20 @@
 
       <div class="analysis">
         {if $sn}
-        {fetch file="`$smarty.const.APP_URL`sn/`$sn|urlencode`"}
+          {fetch file="`$sn|site_url:'sn/'`"}
         {/if}
       </div>
       
       <div class="verse-nav">
-        <a {if $prev.book} href="?book={$prev.book}&chapter={$prev.chapter}" {/if}>
+        <a {if $prev.book} href="{$prev|nav_url}" {/if}>
         <arrow left></arrow></a>
-        <a {if $next.book} href="?book={$next.book}&chapter={$next.chapter}" {/if}>
+        <a {if $next.book} href="{$next|nav_url}" {/if}>
         <arrow right></arrow></a>
       </div>
     </navigation>
 
     <div class="verses">
-      <h1>{$book|book_name} {$chapter}</h1>
+      <h1>{$book|name} {$chapter}</h1>
 
       {foreach $verses as $v}
         <p><sup>{$v.verse}</sup> {$v.text|remove_prefix}</p>

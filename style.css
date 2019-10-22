@@ -1,14 +1,30 @@
 :root {
-    --bg: #202223;
-    --text: #aca9a2;
+    --ha-shem: #98dafc;
+    --bg: #0b3c5d;
+    --text: #e6e6e8;
     --blue: #66afd5;
-    --grey: #383838;
-    --dark: #100f0f;
+    --border: #2f677e;
+    --dark: #1d2731;
     --pink: #dca8a8;
     --green: #2bac4b;
-    --orange: #e39963;
+    --orange: #d9b310;
     --pale-orange: #eac1b9;
     --search-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23aca9a2" width="25" height="25" viewBox="0 0 25 25" fill-rule="evenodd"><path d="M16.036 18.455l2.404-2.405 5.586 5.587-2.404 2.404zM8.5 2C12.1 2 15 4.9 15 8.5S12.1 15 8.5 15 2 12.1 2 8.5 4.9 2 8.5 2zm0-2C3.8 0 0 3.8 0 8.5S3.8 17 8.5 17 17 13.2 17 8.5 13.2 0 8.5 0zM15 16a1 1 0 1 1 2 0 1 1 0 1 1-2 0"></path></svg>');
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ha-shem: #98bacb;
+        --bg: #202223;
+        --text: #aca9a2;
+        --blue: #66afd5;
+        --border: #383838;
+        --dark: #100f0f;
+        --pink: #dca8a8;
+        --green: #2bac4b;
+        --orange: #e39963;
+        --pale-orange: #eac1b9;
+    } 
 }
 
 *, :after, :before {
@@ -56,7 +72,7 @@ navigation {
 
 divinename {
     font-weight: bold;
-    color: #98bacb;
+    color: var(--ha-shem);
 }
 
 .books, 
@@ -70,7 +86,7 @@ divinename {
 .verses {
     padding: 12px;
     overflow-y: auto;
-    border-left: solid 2px var(--grey);
+    border-left: solid 2px var(--border);
 }
 
 .verses p {
@@ -127,9 +143,10 @@ divinename {
     width: 100%;
     height: 100%;
     font-size: 17px;
-    background-color: #202223;
-    border: solid 1px #535353;
-    color: #c9c7c5;
+    background-color: var(--bg);
+    border: solid 1px var(--border);
+    border-right: none;
+    color: var(--text);
     padding-left: 40px;
     outline: 0;
 }
@@ -160,13 +177,13 @@ details ul {
     width: 40%;
     list-style: none;
     position: absolute;
-    border-top: solid 1px var(--grey);
+    border-top: solid 1px var(--border);
 }
 
 details ul li {
     text-align: center;
     background-color: var(--dark);
-    border: solid 1px var(--grey);
+    border: solid 1px var(--border);
     border-left: none;
     border-top: none;
 }
@@ -177,7 +194,7 @@ details ul .active {
 
 details ul .active, 
 details ul li a:hover {
-    background-color: var(--grey);
+    background-color: var(--border);
 }
 
 details ul li a {
@@ -202,7 +219,7 @@ details summary::-webkit-details-marker {
     grid-template-rows: repeat(auto-fit, minmax(50px, 1fr));
     grid-auto-flow: column;
     height: 80%;
-    width: 53%;
+    width: 50%;
     z-index: 3;
 }
 
@@ -212,6 +229,11 @@ details summary::-webkit-details-marker {
 
 .books ul li:nth-child(n+40) a {
     color: var(--green);
+}
+
+.books ul li sup {
+    margin-left: 5px;
+    font-size: 60%;
 }
 
 .verse-nav {

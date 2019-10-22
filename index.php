@@ -2,25 +2,24 @@
 
 require "smarty/Smarty.class.php";
 require "flight/Flight.php";
+require "utils.php";
 require "rb.php";
 require "db.php";
 
-define("APP_URL", getAbsoluteUrl());
-
 Flight::route("GET /", function () {
   $query = Flight::request()->query;
-  $book = getbook($query);
-  $chapter = getchapter($query);
+  $chapter = getchapterId($query);
+  $book = getbookId($query);
 
   Flight::render("home.html", [
-    "sn" => $query->sn,
     "book" => $book,
     "books" => books(),
     "chapter" => $chapter,
     "chapters" => chapters($book),
     "verses" => verses($book, $chapter),
     "next" => getnext($book, $chapter),
-    "prev" => getprev($book, $chapter)
+    "prev" => getprev($book, $chapter),
+    "sn" => $query->sn
   ]);
 });
 
@@ -43,6 +42,7 @@ Flight::route("GET /search/@q", function ($q) {
 });
 
 Flight::register("view", "Smarty", array(), function ($smarty) {
+  define("APP_URL", getAbsoluteUrl());
   $smarty->loadFilter("output", "trimwhitespace");
   $smarty->template_dir = "templates/";
   $smarty->compile_dir = "smarty/templates_c/";

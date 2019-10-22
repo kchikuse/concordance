@@ -7,8 +7,8 @@
     <ul>
       {foreach $links as $lnk}
       <li>
-        <a href="?book={$lnk.book}&chapter={$lnk.chapter}&sn={$sn}">
-          {$lnk.book|book_name} {$lnk.chapter}
+        <a href="{$lnk|nav_url}&sn={$sn}">
+          {$lnk.book|name} {$lnk.chapter}
         </a>
       </li>
       {/foreach}

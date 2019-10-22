@@ -3,7 +3,7 @@
 R::setup("mysql:host=localhost;dbname=bible","foo","bar");
 
 function search($q) {
-    $redirect = getBookRedirect($q);
+    $redirect = IdRedirect($q);
 
     if($redirect) {
         return [
@@ -16,8 +16,8 @@ function search($q) {
     ];
 }
 
-function getBookRedirect($q) {
-    $q = strtoupper(trim($q));
+function IdRedirect($q) {
+    $q = uppercase($q);
     $parts = preg_split('~[A-Z]+\K~', $q);
     $shortName = trim($parts[0]);
     $chapter = trim($parts[1]);
@@ -25,10 +25,10 @@ function getBookRedirect($q) {
     if(!$chapter) return null;
 
     foreach (books() as $book) {
-        $bookName = strtoupper($book["name"]);
+        $bookName = uppercase($book["name"]);
         $bookName = str_replace(" ", "", $bookName);
-        $matches = substr($bookName, 0, strlen($shortName)) === $shortName;
-        if ($matches) {
+
+        if (startsWith($bookName, $shortName)) {
             return [
                 "book" => $book["id"],
                 "chapter" => $chapter
@@ -50,18 +50,17 @@ function verses($book, $chapter) {
 }
 
 function strongs($sn) {
-    $sn = strtoupper( trim($sn) );
+    $sn = uppercase($sn);
     $sn = str_replace("H0", "H", $sn);
-    $containsSpace = strpos($sn, " ") !== false;
-    $sn = $containsSpace ? explode(" ", $sn) : [ $sn ];
+    $sn = hasSpace($sn) ? explode(" ", $sn) : [ $sn ];
     return R::find( "lexicon", " number IN (" . R::genSlots($sn) . ")", $sn);
 }
 
 function strongs_links($sn) {
-    $sn = strtoupper(trim($sn));
+    $sn = uppercase($sn);
     $sn = explode(" ", $sn);
     $sn = substr_replace($sn, "strong:", 0, 0);
-    $sn  =implode(" ", $sn);
+    $sn = implode(" ", $sn);
 
     $rows = R::getAll(
         "SELECT book, chapter, 
@@ -77,7 +76,8 @@ function strongs_links($sn) {
 
     foreach ($rows as $row) {
         $exists = array_filter($results, function ($e) use ($row) {
-           return $e["book"] == $row["book"] && $e["chapter"] == $row["chapter"];
+            return $e["book"] == $row["book"]
+                && $e["chapter"] == $row["chapter"];
         });
 
         if (empty($exists)) {
@@ -454,6 +454,21 @@ function chapters($bookid) {
     return range(1, book($bookid)["chapters"]);
 }
 
+function getbookId($query) {
+    $book = $query->book;
+    if (is_invalid($book)) return 1;
+    $books = count(books());
+    return $book > $books ? $books : $book;
+}
+
+function getchapterId($query) {
+    $book = book($query->book);
+    $chapter = $query->chapter;
+    $chapters = $book["chapters"];
+    if (is_invalid($chapter)) return 1;
+    return $chapter > $chapters ? $chapters : $chapter;
+}
+
 function getnext($book, $chapter) {
     $nextbook = $book;
     $nextchapter = $chapter + 1;
@@ -496,116 +511,21 @@ function getprev($book, $chapter) {
     ];
 }
 
-function getbook($query) {
-    $book = $query->book;
-    if (bogus($book)) return 1;
-    $books = count(books());
-    return $book > $books ? $books : $book;
-}
 
-function getchapter($query) {
-    $book = book($query->book);
-    $chapter = $query->chapter;
-    $chapters = $book["chapters"];
-    if (bogus($chapter)) return 1;
-    return $chapter > $chapters ? $chapters : $chapter;
-}
+// Smarty functions
 
-function getAbsoluteUrl() {
-    $url =  sprintf("%s://%s%s",
-        isset($_SERVER["HTTPS"]) ? "https" : "http",
-        $_SERVER["HTTP_HOST"],
-        $_SERVER["REQUEST_URI"]
-    );
-
-    return strtok($url, "?");
-}
-
-/* 
-In the bref metadata, the books are not in the correct Biblical order, 
-so do a lookup for the few faulty books. 
-Also, the metadata for JG wrongly sets Daniel to 33, but KD uses 
-that same 33 to mean Ezekiel (26), so this fixes that as well */
-function fixMetadata($version, $book) {
-    // 1 = John Gill's Exposition
-    // 2 = Keil & Delitzsch Commentary
-    // 3 = Matthew Henry's Commentary 
-
-    // the metadata for Gill sets Daniel as 33, which must be 27
-    if ($version == 1 && $book == 33) {
-        return 27;
-    }
-
-    $fixed = [
-        19 => 17,
-        22 => 18,
-        23 => 19,
-        24 => 20,
-        25 => 21,
-        29 => 23,
-        30 => 24,
-        31 => 25,
-        33 => 26,
-        34 => 27,
-        35 => 28,
-        36 => 29,
-        37 => 30,
-        39 => 32,
-        40 => 33,
-        41 => 34,
-        42 => 35,
-        45 => 38,
-        46 => 39,
-        47 => 40,
-        48 => 41,
-        49 => 42,
-        50 => 43,
-        52 => 45,
-        53 => 46,
-        54 => 47,
-        56 => 49,
-        58 => 51,
-        65 => 58,
-        67 => 60,
-        68 => 61,
-        69 => 62,
-        73 => 66
-    ];
-
-    return array_key_exists($book, $fixed) ? $fixed[$book] : $book;
-}
-
-function hilite($content, $q) {
-    $needles = explode(" ", $q);
-    $content = stripslashes(strip_tags($content));
-
-    foreach ($needles as $key) {
-        $position = stripos($content, $key);
-        if(bogus($position)) continue;
-        $original = substr($content, $position, strlen($key));
-        $content = str_replace($original, "<match>" . $original . "</match>", $content);
-    }
-    
-    return str_replace("match>", "mark>", $content); 
-}
-
-function json($data) {
-    return json_encode($data, JSON_NUMERIC_CHECK);
-}
-
-function bogus($value) {
-    return !isset($value) || 
-    is_null($value) || 
-    !is_numeric($value) || 
-    $value < 1;
-}
-
-
-/** Smarty functions **/
-function book_name($params) {
+function name($params) {
     return book($params)["name"];
 }
 
 function remove_prefix($params) {
     return str_replace(["strong:", "strongMorph:"], "", $params);
+}
+
+function site_url($params, $uri) {
+    return getAbsoluteUrl() . $uri . urlencode($params);
+}
+
+function nav_url($params) {
+    return sprintf("?book=%d&chapter=%d", $params["book"], $params["chapter"]);
 }
