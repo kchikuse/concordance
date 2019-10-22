@@ -2,7 +2,42 @@
 
 R::setup("mysql:host=localhost;dbname=bible","foo","bar");
 
-R::debug( FALSE );
+function search($q) {
+    $redirect = getBookRedirect($q);
+
+    if($redirect) {
+        return [
+            "redirect" => $redirect
+        ];
+    }
+
+    return [
+        "easton" => easton($q)
+    ];
+}
+
+function getBookRedirect($q) {
+    $q = strtoupper(trim($q));
+    $parts = preg_split('~[A-Z]+\K~', $q);
+    $shortName = trim($parts[0]);
+    $chapter = trim($parts[1]);
+
+    if(!$chapter) return null;
+
+    foreach (books() as $book) {
+        $bookName = strtoupper($book["name"]);
+        $bookName = str_replace(" ", "", $bookName);
+        $matches = substr($bookName, 0, strlen($shortName)) === $shortName;
+        if ($matches) {
+            return [
+                "book" => $book["id"],
+                "chapter" => $chapter
+            ];
+        }
+    }
+
+    return null;
+}
 
 function verses($book, $chapter) {
     return R::getAll(
@@ -552,6 +587,10 @@ function hilite($content, $q) {
     }
     
     return str_replace("match>", "mark>", $content); 
+}
+
+function json($data) {
+    return json_encode($data, JSON_NUMERIC_CHECK);
 }
 
 function bogus($value) {

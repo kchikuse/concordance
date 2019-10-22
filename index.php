@@ -32,10 +32,14 @@ Flight::route("GET /sn/@sn", function ($sn) {
   ]);
 });
 
-Flight::route("GET /search/@query", function ($query) {
-  Flight::render("search.html", [
-    "easton" => easton($query)
-  ]);
+Flight::route("GET /search/@q", function ($q) {
+  $response = search($q);
+  $redirect = isset($response["redirect"]);
+  if ($redirect) {
+    Flight::halt(301, json($response["redirect"]));
+  }
+
+  Flight::render("search.html", $response);
 });
 
 Flight::register("view", "Smarty", array(), function ($smarty) {

@@ -1,10 +1,9 @@
 addEventListener("DOMContentLoaded", () => {
-    const blank = e => !e || e.trim().length == 0;
     const details = document.querySelectorAll("details");
     const analysis = document.querySelector(".analysis");
     const search = document.querySelector("#search");
 
-    document.onclick = e => {
+    document.onclick = async e => {
         let item = e.target;
         const tags = ["w", "divinename"];
         const tag = item.tagName.toLowerCase();
@@ -18,25 +17,32 @@ addEventListener("DOMContentLoaded", () => {
         }
 
         const sn = item.getAttribute("lemma");
-        if (blank(sn)) return;
-        load(`sn/${sn}`);
+        if (sn) {
+            output("LOADING...");
+            const response = await fetch(`sn/${sn}`);
+            output(await response.text());
+        }
     };
 
-    search.onsearch = () => {
+    search.onsearch = async () => {
         const q = search.value;
-        
-        if (blank(q)) {
-            analysis.innerHTML = "";
+        if (!q || q.trim().length == 0) {
+            return output("");
+        }
+
+        output("LOADING...");
+        const response = await fetch("search/" + q);
+        if(response.status == 301) {
+            const r = await response.json();
+            location.href = `?book=${r.book}&chapter=${r.chapter}`;
             return;
         }
 
-        load("search/" + q);
+        output(await response.text());
     };
 
-    const load = async url => {
-        analysis.innerHTML = "LOADING...";
-        const response = await fetch(url);
-        analysis.innerHTML = await response.text();
+    const output = text => {
         details.forEach(e => e.removeAttribute("open"));
+        analysis.innerHTML = text;
     };
 });
