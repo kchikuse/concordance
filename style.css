@@ -1,30 +1,15 @@
 :root {
-    --ha-shem: #98dafc;
-    --bg: #0b3c5d;
-    --text: #e6e6e8;
+    --ha-shem: #98bacb;
+    --bg: #202223;
+    --text: #aca9a2;
     --blue: #66afd5;
-    --border: #2f677e;
-    --dark: #1d2731;
+    --border: #383838;
+    --dark: #100f0f;
     --pink: #dca8a8;
     --green: #2bac4b;
-    --orange: #d9b310;
+    --orange: #e39963;
     --pale-orange: #eac1b9;
     --search-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23aca9a2" width="25" height="25" viewBox="0 0 25 25" fill-rule="evenodd"><path d="M16.036 18.455l2.404-2.405 5.586 5.587-2.404 2.404zM8.5 2C12.1 2 15 4.9 15 8.5S12.1 15 8.5 15 2 12.1 2 8.5 4.9 2 8.5 2zm0-2C3.8 0 0 3.8 0 8.5S3.8 17 8.5 17 17 13.2 17 8.5 13.2 0 8.5 0zM15 16a1 1 0 1 1 2 0 1 1 0 1 1-2 0"></path></svg>');
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --ha-shem: #98bacb;
-        --bg: #202223;
-        --text: #aca9a2;
-        --blue: #66afd5;
-        --border: #383838;
-        --dark: #100f0f;
-        --pink: #dca8a8;
-        --green: #2bac4b;
-        --orange: #e39963;
-        --pale-orange: #eac1b9;
-    } 
 }
 
 *, :after, :before {
@@ -189,7 +174,7 @@ details ul li {
 }
 
 details ul .active {
-    color: var(--orange);
+    color: var(--orange) !important;
 }
 
 details ul .active, 
@@ -225,15 +210,11 @@ details summary::-webkit-details-marker {
 
 .books ul li {
     padding: 5px;
+    text-align: left;
 }
 
 .books ul li:nth-child(n+40) a {
     color: var(--green);
-}
-
-.books ul li sup {
-    margin-left: 5px;
-    font-size: 60%;
 }
 
 .verse-nav {

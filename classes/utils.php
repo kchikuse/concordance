@@ -46,3 +46,15 @@ function is_invalid($value) {
     !is_numeric($value) || 
     $value < 1;
 }
+
+function remove_prefix($params) {
+    return str_replace(["strong:", "strongMorph:"], "", $params);
+}
+
+function site_url($params, $uri) {
+    return getAbsoluteUrl() . $uri . urlencode($params);
+}
+
+function nav_url($params) {
+    return sprintf("?book=%d&chapter=%d", $params["book"], $params["chapter"]);
+}

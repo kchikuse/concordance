@@ -1,7 +1,5 @@
-{if isset($easton)}
-    <ul class="search-results">
-        {foreach $easton as $d}
-        <li><span>{$d.word}</span> - {$d.description}</li>
-        {/foreach}
-    </ul>
-{/if}
+<ul class="search-results">
+    {foreach $easton as $d}
+    <li><span>{$d.word}</span> - {$d.description}</li>
+    {/foreach}
+</ul>

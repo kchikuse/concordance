@@ -27,8 +27,8 @@
         <ul>
         {foreach $books as $b}
           <li>
-            <a href="?book={$b.id}&chapter=1" {if $b.id eq $book} class="active" {/if}>
-              {$b.id|name}<sup>{$b.id}</sup>
+            <a href="?book={$b.id}&chapter=1" {if $b.id eq $book.id} class="active" {/if}>
+              {$b.name}
             </a>
           </li>
         {/foreach}
@@ -40,7 +40,7 @@
         <ul>
         {foreach $chapters as $c}
           <li>
-            <a {if $c eq $chapter} class="active" {else} href="?book={$book}&chapter={$c}" {/if}>{$c}</a>
+            <a {if $c eq $chapter} class="active" {else} href="?book={$book.id}&chapter={$c}" {/if}>{$c}</a>
           </li>
         {/foreach}
         </ul>
@@ -61,7 +61,7 @@
     </navigation>
 
     <div class="verses">
-      <h1>{$book|name} {$chapter}</h1>
+      <h1>{$book.name} {$chapter}</h1>
 
       {foreach $verses as $v}
         <p><sup>{$v.verse}</sup> {$v.text|remove_prefix}</p>
@@ -74,7 +74,7 @@
     w[lemma="strong:{$sn}"] {
       border-bottom: solid 2px var(--orange);
     }
-    </style>
+  </style>
   {/strip}
 </body>
 <script>{$js|strip}</script>
