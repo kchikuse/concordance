@@ -3,7 +3,7 @@
 R::setup("mysql:host=localhost;dbname=bible","foo","bar");
 
 function search($q) {
-    $redirect = IdRedirect($q);
+    $redirect = searchForBookRedirect($q);
 
     if($redirect) {
         return [
@@ -16,13 +16,13 @@ function search($q) {
     ];
 }
 
-function IdRedirect($q) {
+function searchForBookRedirect($q) {
     $q = uppercase($q);
     $parts = preg_split('~[A-Z]+\K~', $q);
     $shortName = trim($parts[0]);
     $chapter = trim($parts[1]);
 
-    if(!$chapter) return null;
+    if(is_invalid($chapter)) return null;
 
     foreach (books() as $book) {
         $bookName = uppercase($book["name"]);
