@@ -1,0 +1,46 @@
+{strip}
+
+  {if $links}
+  <div class="strong-links">
+    <details>
+      <summary>OTHER USES</summary>
+      <ul>
+        {foreach $links as $lnk}
+        <li>
+          <a href="{$lnk.book}/{$lnk.chapter}/{$sn}">
+            {$lnk.name}. {$lnk.chapter}
+          </a>
+        </li>
+        {/foreach}
+      </ul>
+    </details>
+  </div>
+  {/if}
+
+  {foreach $words as $word}
+    <div class="card">
+      <span>{$word.number}</span>
+
+      <p class="lemma">
+        <b>{$word.lemma}</b>
+      </p>
+
+      {if $word.translit}
+      <p><i>{$word.translit}</i></p>
+      {/if}
+
+      {if $word.pron}
+      <p><i>{$word.pron}</i></p>
+      {/if}
+
+      <p>{$word.derivation}</p>
+      <p>{$word.strongs_def}</p>
+      <p>{$word.kjv_def}</p>
+
+      {if $word.xlit}
+      <p>{$word.xlit}</p>
+      {/if}
+    </div>
+  {/foreach}
+
+{/strip}

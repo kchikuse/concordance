@@ -1,0 +1,333 @@
+:root {
+    --ha-shem: #98bacb;
+    --bg: #202223;
+    --text: #aca9a2;
+    --blue: #66afd5;
+    --border: #383838;
+    --dark: #100f0f;
+    --pink: #dca8a8;
+    --green: #2bac4b;
+    --orange: #e39963;
+    --pale-orange: #eac1b9;
+    --text-hilite: solid 1px var(--orange);
+    --search-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23aca9a2" width="25" height="25" viewBox="0 0 25 25" fill-rule="evenodd"><path d="M16.036 18.455l2.404-2.405 5.586 5.587-2.404 2.404zM8.5 2C12.1 2 15 4.9 15 8.5S12.1 15 8.5 15 2 12.1 2 8.5 4.9 2 8.5 2zm0-2C3.8 0 0 3.8 0 8.5S3.8 17 8.5 17 17 13.2 17 8.5 13.2 0 8.5 0zM15 16a1 1 0 1 1 2 0 1 1 0 1 1-2 0"></path></svg>');
+}
+
+*, :after, :before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+::-webkit-scrollbar {
+    background: transparent;
+    width: 0px;
+}
+
+::-moz-selection {
+    background-color: var(--orange);
+    color: white;
+}
+
+::selection {
+    background-color: var(--orange);
+    color: white;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, segoe ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    background-color: var(--bg);
+    color: var(--text);
+    user-select: none;
+    font-size: 16px;
+}
+
+container {
+    display: grid;
+    height: 100vh;
+    grid-template-columns: 25vw 75vw;
+}
+
+sidebar {
+    display: grid;
+    grid-template-rows: 5vh 5vh 5vh 80vh 5vh;
+}
+
+divinename {
+    font-weight: bold;
+    color: var(--ha-shem);
+}
+
+.books, 
+.verses, 
+.chapters, 
+.analysis {
+    width: 100%;
+    height: 100%;
+}
+
+.verses {
+    padding: 12px;
+    overflow-y: auto;
+    border-left: solid 2px var(--border);
+}
+
+.verses p {
+    font-size: 1em;
+    line-height: 2em;
+    margin-bottom: 7px;
+    color: var(--pale-orange);
+}
+
+.verses p w {
+    color: var(--text);
+}
+
+.verses h1 {
+    margin-bottom: 20px;
+}
+
+.verses p sup, 
+.verses p w:hover, 
+.chapters a:hover, 
+.verses p divinename:hover {
+    color: var(--orange);
+}
+
+.verses p w {
+    -webkit-user-select: all;
+    user-select: all;
+    cursor: pointer;
+}
+
+.verses p w.hilite {
+  border-bottom: var(--text-hilite);
+}
+
+.search {
+    display: flex;
+    align-items: center;
+}
+
+.search label {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.search label:before {
+    content: "";
+    background: var(--search-icon) center / contain no-repeat;
+    position: absolute;
+    opacity: 0.5;
+    width: 20px;
+    left: 10px;
+    bottom: 0;
+    top: 0;
+}
+
+.search input {
+    width: 100%;
+    height: 100%;
+    font-size: 17px;
+    background-color: var(--bg);
+    border: solid 1px var(--border);
+    border-right: none;
+    color: var(--text);
+    padding-left: 40px;
+    outline: 0;
+}
+
+.search input::placeholder {
+    color: var(--text);
+    opacity: 0.7;
+}
+
+.search input::-webkit-search-cancel-button {
+    position: relative;
+    right: 20px;
+}
+
+details {
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+details summary {
+    padding: 10px;
+    outline: none;
+    background-color: var(--dark);
+}
+
+details ul {
+    display: grid;
+    width: 40%;
+    list-style: none;
+    position: absolute;
+    border-top: solid 1px var(--border);
+}
+
+details ul li {
+    text-align: center;
+    background-color: var(--dark);
+    border: solid 1px var(--border);
+    border-left: none;
+    border-top: none;
+}
+
+details ul .active {
+    color: var(--orange) !important;
+}
+
+details ul .active, 
+details ul li a:hover {
+    background-color: var(--border);
+}
+
+details ul li a {
+    display: block;
+    text-decoration: none;
+    color: var(--blue);
+    padding: 12px;
+}
+
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+.chapters ul {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    overflow-y: auto;
+    width: 40%;
+    max-height: 80%;
+    z-index: 1;
+}
+
+.books ul {
+    grid-template-columns: auto;
+    grid-template-rows: repeat(auto-fit, minmax(50px, 1fr));
+    grid-auto-flow: column;
+    height: 80%;
+    width: 50%;
+    z-index: 3;
+}
+
+.books ul li {
+    padding: 5px;
+    text-align: left;
+}
+
+.books ul li:nth-child(n+40) a {
+    color: var(--green);
+}
+
+.verse-nav {
+    display: flex;
+    justify-content: space-evenly;
+    text-transform: uppercase;
+    align-items: center;
+}
+
+.verse-nav arrow {
+    height: 15px;
+    width: 15px;
+    border: solid var(--text);
+    border-width: 0 3px 3px 0;
+}
+
+.verse-nav a[href="/"] {
+    visibility: hidden;
+}
+
+.analysis {
+    overflow-y: auto;
+}
+
+.analysis .card {
+    padding: 12px;
+    margin-bottom: 40px;
+}
+
+.analysis .card p {
+    margin-top: 12px;
+    line-height: 23px;
+}
+
+.analysis .card span {
+    font-size: 18px;
+}
+
+.analysis .card .lemma {
+    color: var(--orange);
+    font-weight: bold;
+    font-size: 21px;
+}
+
+.search-results {
+    line-height: 1.5;
+    list-style: none;
+    padding: 12px;
+}
+
+.search-results li {
+    margin-bottom: 15px;
+}
+
+.search-results mark {
+    background-color: transparent;
+    color: var(--orange); 
+}
+
+.search-results reflink {
+    color: var(--pink);
+}
+
+.search-results span,
+.search-results mark {
+    font-weight: 600;
+}
+
+.strong-links ul {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    font-size: 14px;
+    overflow-y: auto;
+    max-height: 73%;
+    width: 25%;
+}
+
+.strong-links ul li {
+    text-align: center;
+}
+
+.strong-links a {
+    display: block;
+}
+
+.strong-links a:hover {
+    color: var(--orange);
+}
+
+note {
+    display: none;
+}
+
+arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+arrow[right] {
+    transform: rotate(-45deg);
+}
+
+arrow[left] {
+    transform: rotate(135deg);
+}
+
+@media only screen and (min-width: 1024px) {   
+}

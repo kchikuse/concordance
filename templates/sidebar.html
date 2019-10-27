@@ -1,0 +1,46 @@
+{strip}
+<sidebar>
+
+  <div class="search">
+    <label for="search">
+      <input id="search" type="search" placeholder="Search..." autocomplete="off" aria-label="Search">
+    </label>
+  </div>
+
+  <details class="books">
+    <summary>BOOKS</summary>
+    <ul>
+    {foreach $books as $b}
+      <li>
+        <a href="{$b.id}"{if $b.id eq $book.id} class="active" {/if}>
+          {$b.name} </a>
+      </li>
+    {/foreach}
+    </ul>
+  </details>
+
+  <details class="chapters">
+    <summary>CHAPTERS</summary>
+    <ul>
+    {foreach $chapters as $c}
+      <li>
+        <a href="{$book.id}/{$c}"{if $c eq $chapter} class="active" {/if}>{$c}</a>
+      </li>
+    {/foreach}
+    </ul>
+  </details>
+
+  <div class="analysis">
+    {$sn|get_analysis}
+  </div>
+  
+  <div class="verse-nav">
+    <a href="{$prev.book}/{$prev.chapter}" aria-label="Back">
+    <arrow left></arrow></a>
+    
+    <a href="{$next.book}/{$next.chapter}" aria-label="Next">
+    <arrow right></arrow></a>
+  </div>
+
+</sidebar>
+{/strip}

@@ -1,0 +1,41 @@
+{fetch file="style.css" assign="css"}
+{fetch file="app.js" assign="js"}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="K Chikuse">
+  <meta name="description" content="Concordance">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#418980">
+  <link href="favicon.ico" rel="icon">
+  <title>Concordance</title>
+  <base href="{$baseUrl}">
+  <style>{$css|strip}</style>
+</head>
+<body data-book="{$vbook}" data-chapter="{$vchapter}">
+{strip}
+  <container>
+  
+    {include file="sidebar.html"}
+
+    <div class="verses">
+      <h1>{$book.name} {$chapter}</h1>
+
+      {foreach $verses as $v}
+        <p><sup>{$v.verse}</sup> {$v.text|remove_prefix}</p>
+      {/foreach}
+    </div>
+  </container>
+  {if $sn}
+  <style id="ws">
+    w[lemma="{$sn}"],
+    w[lemma="strong:{$sn}"] {
+      border-bottom: var(--text-hilite);
+    }
+  </style>
+  {/if}
+{/strip}
+</body>
+<script>{$js|strip}</script>
+</html>
