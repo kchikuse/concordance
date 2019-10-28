@@ -52,7 +52,7 @@ container {
 
 sidebar {
     display: grid;
-    grid-template-rows: 5vh 5vh 5vh 80vh 5vh;
+    grid-template-rows: 5vh 5vh 5vh 5vh 75vh 5vh;
 }
 
 divinename {
@@ -198,29 +198,51 @@ details summary::-webkit-details-marker {
 }
 
 .chapters ul {
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-    overflow-y: auto;
-    width: 40%;
-    max-height: 80%;
+    grid-template-columns: repeat(auto-fit, 43px);
+    width: 27%;
     z-index: 1;
 }
 
+.chapters ul li {
+    line-height: 43px;
+}
+
+.chapters ul li a {
+    padding: 0;
+}
+
 .books ul {
-    grid-template-columns: auto;
-    grid-template-rows: repeat(auto-fit, minmax(50px, 1fr));
     grid-auto-flow: column;
+    grid-template-columns: auto;
+    grid-template-rows: repeat(auto-fit, 43px);
     height: 80%;
-    width: 50%;
+    width: 35%;
     z-index: 3;
 }
 
 .books ul li {
-    padding: 5px;
     text-align: left;
 }
 
 .books ul li:nth-child(n+40) a {
     color: var(--green);
+}
+
+.books ul li a {
+    padding: 12px 0 0 12px;
+    height: 100%;
+}
+
+.commentary .content {
+    padding: 12px;
+    overflow-y: auto;
+    height: 75vh;
+    background-color: var(--bg);
+}
+
+.commentary .content span {
+    color: var(--orange);
+    font-weight: 700;
 }
 
 .verse-nav {
@@ -250,7 +272,8 @@ details summary::-webkit-details-marker {
     margin-bottom: 40px;
 }
 
-.analysis .card p {
+.analysis .card p,
+.commentary .content p {
     margin-top: 12px;
     line-height: 23px;
 }

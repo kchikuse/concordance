@@ -18,6 +18,7 @@ class DB {
             "verses" => $this->verses($book, $chapter),
             "next" => $this->getnext($book, $chapter),
             "prev" => $this->getprev($book, $chapter),
+            "commentary" => $this->commentary($book, $chapter),
             "sn" => $sn
         ];
     }
@@ -76,6 +77,15 @@ class DB {
         }
 
         return ["easton" => $rows];
+    }
+
+    private function commentary($book, $chapter) {
+        return R::getAll("SELECT * FROM mhc WHERE book = :book AND chapter = :chapter",
+            [
+                ":book" => $book,
+                ":chapter" => $chapter
+            ]
+        );
     }
 
     private function verses($book, $chapter) {

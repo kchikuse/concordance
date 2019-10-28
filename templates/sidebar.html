@@ -30,6 +30,15 @@
     </ul>
   </details>
 
+  <details class="commentary" open>
+    <summary>COMMENTARY</summary>
+    <div class="content">
+      {foreach $commentary as $c}
+        <p><span>{$c.startVerse} - {$c.endVerse} </span>{$c.text}</p>
+      {/foreach}
+    </div>
+  </details>
+
   <div class="analysis">
     {$sn|get_analysis}
   </div>

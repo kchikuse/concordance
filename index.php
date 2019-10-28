@@ -48,6 +48,7 @@ Flight::register("view", "Smarty", array(), function ($smarty) {
 
 Flight::map("render", function ($template, $data) {
   Flight::view()->assign("baseUrl", getBaseUrl());
+  Flight::view()->assign("favicon", getFavicon());
   Flight::view()->assign($data);
   Flight::view()->display($template);
 });

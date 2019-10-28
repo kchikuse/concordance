@@ -8,8 +8,8 @@
   <meta name="description" content="Concordance">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#418980">
-  <link href="favicon.ico" rel="icon">
-  <title>Concordance</title>
+  <link rel="icon" href="data:image/x-icon;base64,{$favicon}">
+  <title>{$book.name} {$chapter} - Concordance</title>
   <base href="{$baseUrl}">
   <style>{$css|strip}</style>
 </head>
@@ -23,7 +23,7 @@
       <h1>{$book.name} {$chapter}</h1>
 
       {foreach $verses as $v}
-        <p><sup>{$v.verse}</sup> {$v.text|remove_prefix}</p>
+      <p><sup>{$v.verse}</sup> {$v.text|remove_prefix}</p>
       {/foreach}
     </div>
   </container>
