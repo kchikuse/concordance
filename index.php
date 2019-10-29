@@ -2,6 +2,7 @@
 
 require "smarty/Smarty.class.php";
 require "flight/Flight.php";
+require "app/config.php";
 require "app/search.php";
 require "app/utils.php";
 require "app/rb.php";
@@ -47,8 +48,6 @@ Flight::register("view", "Smarty", array(), function ($smarty) {
 });
 
 Flight::map("render", function ($template, $data) {
-  Flight::view()->assign("baseUrl", getBaseUrl());
-  Flight::view()->assign("favicon", getFavicon());
   Flight::view()->assign($data);
   Flight::view()->display($template);
 });

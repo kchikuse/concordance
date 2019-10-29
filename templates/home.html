@@ -8,25 +8,26 @@
   <meta name="description" content="Concordance">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#418980">
-  <link rel="icon" href="data:image/x-icon;base64,{$favicon}">
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAABI1BMVEUAAAD////37u7LiYjCcnDCeXi9bWvEnZ3MZmbasLDp1dXMj4/Mjo727u7JhYXJg4PHgYHHgIDDd3fBdnS/cnHAfnzAfHrCnp7CnpLjx8bjx8ehFRX///+fAACiHBz+/Pz48fGcAADMiYnOjo7HenqXAADKhISiISHiubndtLTbp6ehDAzPqan9+/v8+vr79/fu3d3UoKDQl5fOi4vJf3+zaWmwXl6oPj6mMDCkKiqWAACTAADDj4+7e3uyZWWrUlKpR0eoNzf68/P16Ojo19ft1dXj0NDizc3rzMzoxcXku7vXq6vFl5fPlJPFc3PFcnK9bm69bW20WVmwT0+rTU3QrKyuV1fq2trUsbG8gYHFdXW2cHCnOjqlKirHmpq3dXWlNDSBhk7KAAAAG3RSTlMA+v7ssKlmGgX+/Pv7+vj44OC6k5NtbRUV/v6JpL75AAACY0lEQVQoz12T53biMBCFJdmYDZ1QQlY2kSsY03sLBFh6D6Qnu/v+T7Fjh5Oy94elc7+Z8UhnhN71A6ELgQ/51mtfiBcubOOb3BHOHI9YocBGY5OLuL/TWGDOMBYdYczmgdhX6soQLF7lrgA6CyYZ1yc9TwO8slGh4CwQkD7/yAUKbn66qh2PtdU0DwHAXe89xzIOndTbbRmkd+oTh2diAJE7QGx6p7dr993u0+9jTW/f2ZwE7P4jcww02+nXnrp/+8dGt3vf72SB43kEboNjEDnRpXpWlxzp2ZqsT8Bk3AUSTEjO1zvZ63YrSVMpmmzpL9l2PQ/ppoD4Mc6JU71ff6WUtiSpRal102voUzGHxzwKjaDMqpP9I6co1W9udEpT8stdZwX2KIR8DO6hR++lJJUa179+XTckSpN9qQc286F1IZdnr71HSE5KRVF8gE1KfuwNWD5XWKMyK6lqU4IUcB9EsQhlYGs1VbXEyshLSpoxcLzP4rAfGFqJeFGYmJp6cPCpNRD856BqJgkjvujZqHsbnw52wnt14ynySEiTqmI0rXeePC1W01CqJC2gBDc809SdDP6nkvJO1c6GXAKh6MyvKcqt7CSeSsi3iqL5Z1F7CIPsclsBbkGAAy2gle0lC7rtcYhn8PK5ouzg8JJlwae5UyrPS5yJAwS5Fni5VVRjfxi8vQ0Oe0NVtku8cH2M4gJfapqiVhTDUCqqomk/8eL86yAz/1l1o1UNo6ptqmd+BoP8RfHgbEg8ZqlcLpkeMpwF4/89oiiXLhLCGCHFNBd1f6fQYkLgw95y2RvmhcTHE/wHo39s1uYSeSsAAAAASUVORK5CYII=">
+  <base href="{$smarty.const.BASE_URL}">
   <title>{$book.name} {$chapter} - Concordance</title>
-  <base href="{$baseUrl}">
   <style>{$css|strip}</style>
 </head>
 <body data-book="{$vbook}" data-chapter="{$vchapter}">
 {strip}
   <container>
-  
+    
     {include file="sidebar.html"}
 
     <div class="verses">
       <h1>{$book.name} {$chapter}</h1>
 
       {foreach $verses as $v}
-      <p><sup>{$v.verse}</sup> {$v.text|remove_prefix}</p>
+      <p><sup>{$v.verse}</sup> {$v.text|clean_up}</p>
       {/foreach}
     </div>
   </container>
+
   {if $sn}
   <style id="ws">
     w[lemma="{$sn}"],
@@ -35,6 +36,7 @@
     }
   </style>
   {/if}
+
 {/strip}
 </body>
 <script>{$js|strip}</script>

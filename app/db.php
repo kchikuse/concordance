@@ -2,8 +2,12 @@
 
 class DB {
 
-    public function __construct() {
-        R::setup("mysql:host=localhost;dbname=bible", "foo", "bar");
+    public function __construct(){
+        R::setup(
+            constant("DB_URI"), 
+            constant("DB_USER"), 
+            constant("DB_PASS")
+        );
     }
 
     public function page($book, $chapter, $sn) {
@@ -68,7 +72,7 @@ class DB {
             FROM easton 
             HAVING score > 1 
             ORDER BY score DESC 
-            LIMIT 1, 12",
+            LIMIT 0, 40",
             [":q" => $query]
         );
 
@@ -80,12 +84,10 @@ class DB {
     }
 
     private function commentary($book, $chapter) {
-        return R::getAll("SELECT * FROM mhc WHERE book = :book AND chapter = :chapter",
-            [
-                ":book" => $book,
-                ":chapter" => $chapter
-            ]
-        );
+        return R::find("mhc", "book = :book AND chapter = :chapter", [
+            ":book" => $book,
+            ":chapter" => $chapter
+        ]);
     }
 
     private function verses($book, $chapter) {
@@ -102,7 +104,7 @@ class DB {
         $sn = uppercase($sn);
         $sn = str_replace("H0", "H", $sn);
         $sn = hasSpace($sn) ? explode(" ", $sn) : [ $sn ];
-        return R::find( "lexicon", " number IN (" . R::genSlots($sn) . ")", $sn);
+        return R::find("lexicon", "number IN (" . R::genSlots($sn) . ")", $sn);
     }
     
     private function strongs_links($sn) {
@@ -139,7 +141,7 @@ class DB {
 
         usort($results, function($a, $b) {
             return $a["book"] > $b["book"];
-        });
+        }); 
     
         return $results;
     }
