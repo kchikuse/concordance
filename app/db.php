@@ -18,7 +18,6 @@ class DB {
             "chapter" => $chapter,
             "books" => $this->books(),
             "book" => $this->book($book),
-            "chapters" => $this->chapters($book),
             "verses" => $this->verses($book, $chapter),
             "next" => $this->getnext($book, $chapter),
             "prev" => $this->getprev($book, $chapter),
@@ -31,7 +30,7 @@ class DB {
         $response = $this->redirect($query);
         return $response ?
             new Search(true, $response) : 
-            new Search(false, $this->easton($query));
+            new Search(false, ["easton" => $this->easton($query)]);
     }
 
     public function analysis($sn) {
@@ -80,7 +79,7 @@ class DB {
             $row["description"] = hilite($row["description"], $query);
         }
 
-        return ["easton" => $rows];
+        return $rows;
     }
 
     private function commentary($book, $chapter) {
@@ -91,13 +90,10 @@ class DB {
     }
 
     private function verses($book, $chapter) {
-        return R::getAll(
-            "SELECT * FROM kjv WHERE book = :book AND chapter = :chapter",
-            [
-                ":book" => $book,
-                ":chapter" => $chapter
-            ]
-        );
+        return R::find("kjv", "book = :book AND chapter = :chapter", [
+            ":book" => $book,
+            ":chapter" => $chapter
+        ]);
     }
 
     private function strongs($sn) {
@@ -123,10 +119,10 @@ class DB {
             [":q" => $sn]
         );
     
-        $results = [];
+        $response = [];
     
         foreach ($rows as $row) {
-            $exists = array_filter($results, function ($e) use ($row) {
+            $exists = array_filter($response, function ($e) use ($row) {
                 return $e["book"] == $row["book"]
                     && $e["chapter"] == $row["chapter"];
             });
@@ -135,15 +131,15 @@ class DB {
                 $id = $row["book"];
                 $book = $this->book($id);
                 $row["name"] = $book["shortName"];
-                $results[] = $row;
+                $response[] = $row;
             }
         }
 
-        usort($results, function($a, $b) {
+        usort($response, function($a, $b) {
             return $a["book"] > $b["book"];
         }); 
     
-        return $results;
+        return $response;
     }
 
     private function book($id) {
@@ -153,10 +149,6 @@ class DB {
             }
         }
     }
-
-    private function chapters($bookid) {
-        return range(1, $this->book($bookid)["chapters"]);
-    }
     
     private function bookId($book) {
         if ($book < 1) return 1;
@@ -165,9 +157,8 @@ class DB {
     }
     
     private function chapterId($book, $chapter) {
-        $book = $this->book($book);
-        $chapters = $book["chapters"];
         if ($chapter < 1) return 1;
+        $chapters = $this->chapters($book);
         return $chapter > $chapters ? $chapters : $chapter;
     }
     
@@ -175,7 +166,7 @@ class DB {
         $nextbook = $book;
         $nextchapter = $chapter + 1;
         $totalbooks = count($this->books());
-        $totalchapters = count($this->chapters($book));
+        $totalchapters = $this->chapters($book);
         
         if($nextchapter > $totalchapters) {
             $nextbook = $book + 1;
@@ -204,13 +195,17 @@ class DB {
                 return;
             }
     
-            $prevchapter = count($this->chapters($prevbook));
+            $prevchapter = $this->chapters($prevbook);
         }
     
         return [
             "book" => $prevbook, 
             "chapter" => $prevchapter 
         ];
+    }
+
+    private function chapters($book) {
+        return $this->book($book)["chapters"];
     }
 
     private function books() {

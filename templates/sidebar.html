@@ -22,11 +22,11 @@
   <details class="chapters">
     <summary>CHAPTERS</summary>
     <ul>
-    {foreach $chapters as $c}
+    {for $c = 1 to $book.chapters}
       <li>
         <a href="{$book.id}/{$c}"{if $c eq $chapter} class="active" {/if}>{$c}</a>
       </li>
-    {/foreach}
+    {/for}
     </ul>
   </details>
 

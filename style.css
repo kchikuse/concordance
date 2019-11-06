@@ -158,7 +158,12 @@ details {
 details summary {
     padding: 10px;
     outline: none;
+    cursor: pointer;
     background-color: var(--dark);
+}
+
+details[open] summary {
+    opacity: 0.6;
 }
 
 details ul {
@@ -200,7 +205,7 @@ details summary::-webkit-details-marker {
 .chapters ul {
     grid-template-columns: repeat(auto-fit, 43px);
     width: 27%;
-    z-index: 1;
+    z-index: 2;
 }
 
 .chapters ul li {
@@ -233,16 +238,29 @@ details summary::-webkit-details-marker {
     height: 100%;
 }
 
+.commentary {
+    z-index: 1;
+}
+
 .commentary .content {
     padding: 12px;
+    height: 80vh;
     overflow-y: auto;
-    height: 75vh;
     background-color: var(--bg);
 }
 
 .commentary .content span {
     color: var(--orange);
     font-weight: 700;
+}
+
+.commentary .content p {
+    padding-top: 12px;
+    line-height: 23px;
+}
+
+.strongs-numbers summary {
+    display: none;
 }
 
 .verse-nav {
@@ -265,21 +283,27 @@ details summary::-webkit-details-marker {
 
 .analysis {
     overflow-y: auto;
+    background-color: var(--bg);
 }
 
 .analysis .card {
     padding: 12px;
-    margin-bottom: 40px;
+    background-color: var(--bg);
+    border-bottom: solid 1px var(--border);
 }
 
-.analysis .card p,
-.commentary .content p {
+.analysis .card:last-of-type {
+    border-bottom: none;
+}
+
+.analysis .card p {
     margin-top: 12px;
     line-height: 23px;
 }
 
 .analysis .card span {
     font-size: 18px;
+    font-weight: 500;
 }
 
 .analysis .card .lemma {
@@ -312,7 +336,7 @@ details summary::-webkit-details-marker {
     font-weight: 600;
 }
 
-.strong-links ul {
+.other-uses ul {
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
     font-size: 14px;
@@ -321,15 +345,15 @@ details summary::-webkit-details-marker {
     width: 25%;
 }
 
-.strong-links ul li {
+.other-uses ul li {
     text-align: center;
 }
 
-.strong-links a {
+.other-uses a {
     display: block;
 }
 
-.strong-links a:hover {
+.other-uses a:hover {
     color: var(--orange);
 }
 
@@ -352,5 +376,60 @@ arrow[left] {
     transform: rotate(135deg);
 }
 
-@media only screen and (min-width: 1024px) {   
-}
+@media only screen and (max-width: 480px) { 
+    container {
+        grid-template-columns: 40vw 60vw;
+    } 
+
+    .books ul {
+        grid-template-rows: repeat(auto-fit, minmax(38px, 1fr));
+        height: 90%;
+    }
+
+    .chapters ul {
+        grid-template-columns: repeat(auto-fit, minmax(43px, 1fr));
+    }
+
+    .books ul li,
+    .chapters ul li,
+    .search-results,
+    .analysis .card p {
+        font-size: 80%;
+    }
+
+    .commentary .content {
+        position: absolute;
+        border-top: solid 1px var(--border);
+    }
+
+    details ul li a {
+        padding: 10px;
+    }
+
+    .verses h1 {
+        font-size: 150%;
+    }
+
+    .verse-nav {
+        justify-content: space-around;
+    }
+
+    .verse-nav arrow {
+        height: 12px;
+        width: 12px;
+    }
+
+    .verses p,
+    details summary,
+    .commentary .content {
+        font-size: 90%;
+    }
+
+    .books ul,
+    .chapters ul,
+    .other-uses ul,
+    .analysis .card,
+    .commentary .content {
+        width: 100%;
+    }
+} 
