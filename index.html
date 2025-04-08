@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KJV Bible Concordance</title>
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <nav id="navigation">
+        <div class="selector">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search (e.g., 'love never fails' or 'Gen 1:1')"
+            autocomplete="off"
+          />
+        </div>
+        <div class="selector">
+          <select id="book-select" aria-labelledby="book-select-label" disabled>
+            <option value="">Loading Books...</option>
+          </select>
+        </div>
+        <div class="selector">
+          <select
+            id="chapter-select"
+            aria-labelledby="chapter-select-label"
+            disabled
+          >
+            <option value="">Select Book First</option>
+          </select>
+        </div>
+      </nav>
+
+      <div id="search-results-container" style="display: none"></div>
+
+      <div id="verse-container"></div>
+    </main>
+
+    <div id="strongs-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">×</span>
+        <h2 id="modal-key"></h2>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <script src="scripts/main.js"></script>
+  </body>
+</html>
