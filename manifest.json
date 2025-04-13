@@ -1,30 +1,45 @@
 {
-    "name": "Bible Concordance with Strong's Numbers",
-    "short_name": "Concordance",
-    "description": "Explore scripture with precision through original Hebrew and Greek word studies",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#111827",
-    "icons": [
-      {
-        "src": "assets/icons/icon-192x192.webp",
-        "sizes": "192x192",
-        "type": "image/webp",
-        "purpose": "any"
-      },
-      {
-        "src": "assets/icons/icon-512x512.webp",
-        "sizes": "512x512",
-        "type": "image/webp",
-        "purpose": "any"
-      },
-      {
-        "src": "assets/icons/maskable_icon.webp",
-        "sizes": "512x512",
-        "type": "image/webp",
-        "purpose": "maskable"
-      }
-    ]
-  }
-  
+  "name": "Bible Concordance with Strong's Numbers",
+  "short_name": "Concordance",
+  "description": "Explore scripture with precision through original Hebrew and Greek word studies",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111827",
+  "screenshots": [
+    {
+      "src": "assets/icons/desktop.webp",
+      "sizes": "3420x1748",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Concordance"
+    },
+    {
+      "src": "assets/icons/mobile.webp",
+      "sizes": "686x1570",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Concordance"
+    }
+  ],
+  "icons": [
+    {
+      "src": "assets/icons/icon-192x192.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512x512.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/maskable_icon.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "maskable"
+    }
+  ]
+}
