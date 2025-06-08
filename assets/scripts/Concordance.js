@@ -82,6 +82,7 @@ const elements = {
   verseContainer: document.getElementById("verse-container"),
   tooltip: document.getElementById("strongs-tooltip"),
   tooltipContent: document.getElementById("tooltip-content"),
+  tooltipCopyButton: document.querySelector(".tooltip-copy-button"),
   themeToggle: document.getElementById("theme-toggle"),
   sunIcon: document.querySelector(".sun-icon"),
   moonIcon: document.querySelector(".moon-icon"),
@@ -296,6 +297,13 @@ const TextFormatter = {
 // STRONG'S HANDLER
 // =====================
 const StrongsHandler = {
+  init() {
+    elements.tooltipCopyButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      this.copyTooltipContent();
+    });
+  },
+
   addClickListeners() {
     const strongsWords =
       elements.verseContainer.querySelectorAll(".strongs-word");
@@ -345,6 +353,7 @@ const StrongsHandler = {
     }`;
 
     elements.tooltip.classList.add("visible");
+    elements.tooltip.setAttribute("aria-hidden", "false");
     state.tooltipOpen = true;
 
     this.positionTooltip(targetElement);
@@ -352,6 +361,34 @@ const StrongsHandler = {
     setTimeout(() => {
       document.addEventListener("click", this.hideTooltip, { once: true });
     }, 0);
+  },
+
+  async copyTooltipContent() {
+    const contentToCopy = elements.tooltipContent.innerText;
+
+    if (!navigator.clipboard) {
+      console.error("Clipboard API not available.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(contentToCopy);
+
+      // Visual Feedback
+      const copyIcon = elements.tooltipCopyButton.querySelector(".copy-icon");
+      const checkIcon = elements.tooltipCopyButton.querySelector(".check-icon");
+
+      copyIcon.style.display = "none";
+      checkIcon.style.display = "block";
+
+      // Revert the icon back after a short delay
+      setTimeout(() => {
+        copyIcon.style.display = "block";
+        checkIcon.style.display = "none";
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
   },
 
   positionTooltip(targetElement) {
@@ -421,6 +458,7 @@ const StrongsHandler = {
 
   hideTooltip() {
     elements.tooltip.classList.remove("visible");
+    elements.tooltip.setAttribute("aria-hidden", "true");
     state.tooltipOpen = false;
     document.removeEventListener("click", StrongsHandler.hideTooltip);
   },
@@ -901,7 +939,10 @@ async function initialize() {
   await Database.preCacheDatabase();
   await Database.initialize();
   EventHandlers.init();
+  StrongsHandler.init();
   Theme.setTheme(Theme.getCurrentTheme());
+  
+  elements.tooltip.setAttribute('aria-hidden', 'true');
 }
 
 document.addEventListener("DOMContentLoaded", initialize);

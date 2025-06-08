@@ -461,6 +461,33 @@ main {
   margin-right: 0.5em;
 }
 
+.tooltip-copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: transparent;
+  border: none;
+  padding: 4px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--close-button-color); 
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tooltip-copy-button:hover {
+  background-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.tooltip-copy-button svg {
+  display: block;
+  stroke: currentColor;
+}
+
+#tooltip-content h3 {
+  padding-right: 2rem; 
+}
+
 @keyframes highlight-pulse {
   0%,
   100% {
