@@ -1,13 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Explore scripture with precision through original Hebrew and Greek word studies" />
-    <title>Concordance</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title>Bible Concordance - Explore scripture with precision</title>
+    <meta
+      name="description"
+      content="Explore scripture with precision through original Hebrew and Greek word studies"
+    />
+    <meta
+      name="keywords"
+      content="bible concordance, Strongs numbers, bible study"
+    />
+    <meta name="author" content="Bible Concordance" />
+    <meta name="language" content="en" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#111827" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Bible Concordance" />
+    <meta
+      property="og:title"
+      content="Bible Concordance - Explore scripture with precision"
+    />
+    <meta
+      property="og:description"
+      content="Explore scripture with precision through original Hebrew and Greek word studies"
+    />
+    <meta
+      property="og:image"
+      content="http://localhost/scripture/assets/icons/mobile.webp"
+    />
+    <meta property="og:url" content="http://localhost/scripture/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Bible Concordance - Explore scripture with precision"
+    />
+    <meta
+      name="twitter:description"
+      content="Explore scripture with precision through original Hebrew and Greek word studies"
+    />
+    <meta
+      name="twitter:image"
+      content="http://localhost/scripture/assets/icons/mobile.webp"
+    />
+    <link
+      rel="preload"
+      href="assets/fonts/Poppins-Regular.woff2"
+      as="font"
+      crossorigin="anonymous"
+    />
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" href="favicon.ico" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" href="favicon.ico" />
+    <link rel="canonical" href="http://localhost/scripture/" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Bible Concordance",
+        "description": "Explore scripture with precision through original Hebrew and Greek word studies",
+        "applicationCategory": "Education, Religious",
+        "operatingSystem": "Any",
+        "url": "http://localhost/scripture/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Bible Concordance",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "http://localhost/scripture/assets/icons/icon-192x192.webp"
+          }
+        }
+      }
+    </script>
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
@@ -62,7 +130,15 @@
       </div>
     </div>
 
-    <script src="assets/scripts/database.service.js"></script>
-    <script src="assets/scripts/main.js"></script>
+    <script src="assets/scripts/libs/sql-wasm.js"></script>
+    <script src="assets/scripts/services/SQLiteService.js"></script>
+    <script src="assets/scripts/services/DatabaseService.js"></script>
+    <script src="assets/scripts/Concordance.js"></script>
+    <noscript>
+      <div class="no-scripts" role="alert">
+        JavaScript is required to run the Concordance. Please enable JavaScript
+        in your browser settings.
+      </div>
+    </noscript>
   </body>
 </html>

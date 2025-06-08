@@ -9,14 +9,17 @@ const STATIC_RESOURCES = [
   "assets/styles.css",
   "assets/kjv.sqlite",
   "assets/db-version.json",
-  "assets/scripts/database.service.js",
-  "assets/scripts/main.js",
-  "assets/scripts/worker.sql-wasm.js",
-  "assets/scripts/sql-wasm.wasm",
+  "assets/scripts/services/DatabaseService.js",
+  "assets/scripts/services/SQLiteService.js",
+  "assets/scripts/Concordance.js",
+  "assets/scripts/libs/sql-wasm.js",
+  "assets/scripts/libs/sql-wasm.wasm",
   "assets/fonts/Poppins-Regular.woff2",
   "assets/icons/icon-192x192.webp",
   "assets/icons/icon-512x512.webp",
   "assets/icons/maskable_icon.webp",
+  "assets/icons/mobile.webp",
+  "assets/icons/desktop.webp",
 ];
 
 self.addEventListener("install", (event) => {
