@@ -72,6 +72,7 @@ const bookMap = {
 
 const CACHE_NAME = "concordance-cache-v1";
 const LAST_BOOK_ID = Math.max(...Object.keys(bookMap).map(Number));
+const STORAGE_KEY = "concordance_last_state";
 
 // =====================
 // DOM ELEMENTS
@@ -725,6 +726,14 @@ const Search = {
   performTextSearch(query) {
     if (!query) return;
 
+    // Clear selection state when performing a text search
+    state.currentBook = null;
+    state.currentChapter = null;
+    elements.bookSelect.value = "";
+    elements.chapterSelect.innerHTML =
+      '<option value="">Select Book First</option>';
+    elements.chapterSelect.disabled = true;
+
     elements.searchResultsContainer.innerHTML =
       '<div class="search-results-header">Searching...</div>';
     elements.searchResultsContainer.style.display = "block";
@@ -849,6 +858,8 @@ const EventHandlers = {
       state.currentChapter = null;
       state.isNavigatingBook = false;
 
+      elements.searchResultsContainer.style.display = "none";
+
       elements.chapterSelect.innerHTML =
         '<option value="">Loading Chapters...</option>';
       elements.chapterSelect.disabled = true;
@@ -872,6 +883,8 @@ const EventHandlers = {
       const selectedBook = parseInt(elements.bookSelect.value, 10);
       const selectedChapter = parseInt(elements.chapterSelect.value, 10);
 
+      elements.searchResultsContainer.style.display = "none";
+
       elements.verseContainer.style.display = "none";
       Navigation.removeControls();
       if (state.tooltipOpen) StrongsHandler.hideTooltip();
@@ -882,6 +895,7 @@ const EventHandlers = {
         state.isNavigatingBook = false;
         UI.scrollTop();
         DataFetcher.fetchVerses(selectedBook, selectedChapter);
+        StateManager.saveState();
       } else if (!selectedChapter) {
         state.currentChapter = null;
       }
@@ -909,6 +923,8 @@ const EventHandlers = {
             Search.performTextSearch(query);
             state.isReferenceSearch = false;
           }
+
+          StateManager.saveState();
         }, 300);
       }
     });
@@ -933,16 +949,68 @@ const EventHandlers = {
 };
 
 // =====================
+// STATE MANAGEMENT
+// =====================
+const StateManager = {
+  saveState() {
+    const stateToSave = {
+      book: state.currentBook,
+      chapter: state.currentChapter,
+      searchQuery: elements.searchInput.value.trim(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+  },
+
+  loadState() {
+    const savedStateJSON = localStorage.getItem(STORAGE_KEY);
+    if (savedStateJSON) {
+      try {
+        return JSON.parse(savedStateJSON);
+      } catch (e) {
+        localStorage.removeItem(STORAGE_KEY);
+        return null;
+      }
+    }
+    return null;
+  },
+};
+
+// =====================
 // INITIALIZATION
 // =====================
+function restoreLastState() {
+  const savedState = StateManager.loadState();
+
+  if (!savedState) {
+    return;
+  }
+
+  // Always restore the search input's value
+  elements.searchInput.value = savedState.searchQuery || "";
+
+  if (savedState.book && savedState.chapter) {
+    elements.bookSelect.value = savedState.book;
+    state.currentBook = parseInt(savedState.book, 10);
+    state.targetChapter = parseInt(savedState.chapter, 10);
+    // Set a flag to tell DataFetcher to auto-select the target chapter
+    // and scroll to the verse if applicable.
+    state.isVerseNavigation = true;
+    DataFetcher.fetchChapters(state.currentBook);
+  } else if (savedState.searchQuery) {
+    Search.performTextSearch(savedState.searchQuery);
+  }
+}
+
 async function initialize() {
   await Database.preCacheDatabase();
   await Database.initialize();
   EventHandlers.init();
   StrongsHandler.init();
   Theme.setTheme(Theme.getCurrentTheme());
-  
-  elements.tooltip.setAttribute('aria-hidden', 'true');
+
+  elements.tooltip.setAttribute("aria-hidden", "true");
+
+  restoreLastState();
 }
 
 document.addEventListener("DOMContentLoaded", initialize);
