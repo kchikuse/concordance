@@ -80,10 +80,8 @@ const elements = {
   bookSelect: document.getElementById("book-select"),
   chapterSelect: document.getElementById("chapter-select"),
   verseContainer: document.getElementById("verse-container"),
-  modal: document.getElementById("strongs-modal"),
-  modalKey: document.getElementById("modal-key"),
-  modalBody: document.getElementById("modal-body"),
-  closeModalButton: document.querySelector(".close-button"),
+  tooltip: document.getElementById("strongs-tooltip"),
+  tooltipContent: document.getElementById("tooltip-content"),
   themeToggle: document.getElementById("theme-toggle"),
   sunIcon: document.querySelector(".sun-icon"),
   moonIcon: document.querySelector(".moon-icon"),
@@ -97,7 +95,7 @@ const elements = {
 const state = {
   db: null,
   dbReady: false,
-  modalOpen: false,
+  tooltipOpen: false,
   currentBook: null,
   currentChapter: null,
   chaptersInCurrentBook: [],
@@ -308,36 +306,33 @@ const StrongsHandler = {
 
   handleClick(event) {
     event.stopPropagation();
-    const key = event.target.dataset.strongs;
-    if (key && !state.modalOpen) {
-      state.modalOpen = true;
-      document.body.classList.add("modal-open");
 
+    if (state.tooltipOpen) {
+      StrongsHandler.hideTooltip();
+    }
+
+    const key = event.target.dataset.strongs;
+    if (key) {
       Database.executeIfReady(() => state.db.getStrongsInfo(key))
         .then((data) => {
-          StrongsHandler.showModal(data);
+          if (data) {
+            StrongsHandler.showTooltip(data, event.target);
+          }
         })
         .catch((error) => {
           ErrorHandler.showGenericError(error);
-          StrongsHandler.hideModal();
+          StrongsHandler.hideTooltip();
         });
     }
   },
 
-  showModal(data) {
-    if (!data) {
-      this.hideModal();
-      return;
-    }
-
+  showTooltip(data, targetElement) {
     let key = `${data.key} - ${data.lemma || ""}`;
     if (data.xlit) key += ` (${data.xlit})`;
 
     let bodyHtml = "";
     if (data.pron)
       bodyHtml += `<p><strong>Pronunciation:</strong> ${data.pron}</p>`;
-    if (data.translit)
-      bodyHtml += `<p><strong>Transliteration:</strong> ${data.translit}</p>`;
     if (data.derivation)
       bodyHtml += `<p><strong>Derivation:</strong> ${data.derivation}</p>`;
     if (data.strongs_def)
@@ -345,45 +340,89 @@ const StrongsHandler = {
     if (data.kjv_def)
       bodyHtml += `<p><strong>KJV Usage:</strong> ${data.kjv_def}</p>`;
 
-    elements.modalKey.textContent = key;
-    elements.modalBody.innerHTML = bodyHtml || "<p>No details available.</p>";
-    elements.modal.classList.add("open");
+    elements.tooltipContent.innerHTML = `<h3>${key}</h3>${
+      bodyHtml || "<p>No details available.</p>"
+    }`;
 
-    // Add event listeners after a small delay to prevent immediate triggering
+    elements.tooltip.classList.add("visible");
+    state.tooltipOpen = true;
+
+    this.positionTooltip(targetElement);
+
     setTimeout(() => {
-      elements.modal.addEventListener("click", this.handleBackgroundClick);
-      elements.closeModalButton.addEventListener(
-        "click",
-        this.handleBackgroundClick
-      );
-    }, 100);
+      document.addEventListener("click", this.hideTooltip, { once: true });
+    }, 0);
   },
 
-  hideModal() {
-    elements.modal.removeEventListener("click", this.handleBackgroundClick);
-    elements.closeModalButton.removeEventListener(
-      "click",
-      this.handleBackgroundClick
-    );
-    elements.modal.classList.remove("open");
-    document.body.classList.remove("modal-open");
+  positionTooltip(targetElement) {
+    const tooltip = elements.tooltip;
+    const arrow = tooltip.querySelector(".tooltip-arrow");
+    const gap = 10; // Space between word and tooltip
 
-    setTimeout(() => {
-      if (!elements.modal.classList.contains("open")) {
-        elements.modalKey.textContent = "";
-        elements.modalBody.innerHTML = "";
-        state.modalOpen = false;
+    // Make sure styles are applied before getting dimensions
+    tooltip.classList.remove("flipped");
+
+    const targetRect = targetElement.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    // 1. Calculate default position (below the word)
+    const posBelow = targetRect.bottom + window.scrollY + gap;
+
+    // 2. Calculate flipped position (above the word)
+    const posAbove = targetRect.top + window.scrollY - tooltipRect.height - gap;
+
+    let finalTop;
+
+    // 3. Check if default position overflows the bottom of the viewport
+    if (posBelow + tooltipRect.height > window.innerHeight + window.scrollY) {
+      // It overflows the bottom. Let's try flipping it to the top.
+      // 4. Check if the flipped position would be cut off at the top.
+      if (posAbove < window.scrollY) {
+        // It's also cut off at the top. This is the worst case.
+        // Revert to the default bottom position. The user can scroll down to see it.
+        finalTop = posBelow;
+        tooltip.classList.remove("flipped");
+      } else {
+        // There's enough space above, so use the flipped position.
+        finalTop = posAbove;
+        tooltip.classList.add("flipped");
       }
-    }, 300);
+    } else {
+      // There's enough space below, so use the default position.
+      finalTop = posBelow;
+      tooltip.classList.remove("flipped");
+    }
+
+    let left =
+      targetRect.left +
+      window.scrollX +
+      targetRect.width / 2 -
+      tooltipRect.width / 2;
+
+    // Prevent overflowing the left/right of the viewport
+    const margin = 10; // Margin from screen edges
+    if (left < margin) {
+      left = margin;
+    } else if (
+      left + tooltipRect.width >
+      document.documentElement.clientWidth - margin
+    ) {
+      left = document.documentElement.clientWidth - tooltipRect.width - margin;
+    }
+
+    // Adjust arrow position to stay pointing at the word
+    const arrowOffset = targetRect.left + targetRect.width / 2 - left;
+    arrow.style.left = `${arrowOffset}px`;
+
+    // Apply the final calculated positions
+    tooltip.style.top = `${finalTop}px`;
+    tooltip.style.left = `${left}px`;
   },
 
-  handleBackgroundClick(event) {
-    if (
-      event.target === elements.modal ||
-      event.target === elements.closeModalButton
-    ) {
-      StrongsHandler.hideModal();
-    }
+  hideTooltip() {
+    elements.tooltip.classList.remove("visible");
+    state.tooltipOpen = false;
+    document.removeEventListener("click", StrongsHandler.hideTooltip);
   },
 };
 
@@ -778,7 +817,7 @@ const EventHandlers = {
       elements.verseContainer.style.display = "none";
       Navigation.removeControls();
 
-      if (state.modalOpen) StrongsHandler.hideModal();
+      if (state.tooltipOpen) StrongsHandler.hideTooltip();
 
       if (selectedBook) {
         DataFetcher.fetchChapters(selectedBook);
@@ -797,7 +836,7 @@ const EventHandlers = {
 
       elements.verseContainer.style.display = "none";
       Navigation.removeControls();
-      if (state.modalOpen) StrongsHandler.hideModal();
+      if (state.tooltipOpen) StrongsHandler.hideTooltip();
 
       if (selectedBook && selectedChapter) {
         state.currentBook = selectedBook;
@@ -837,13 +876,7 @@ const EventHandlers = {
     });
   },
 
-  setupKeyboardHandlers() {
-    addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && elements.modal.classList.contains("open")) {
-        StrongsHandler.hideModal();
-      }
-    });
-  },
+  setupKeyboardHandlers() {},
 
   setupThemeHandlers() {
     elements.themeToggle.addEventListener("click", () => {
@@ -869,9 +902,6 @@ async function initialize() {
   await Database.initialize();
   EventHandlers.init();
   Theme.setTheme(Theme.getCurrentTheme());
-
-  elements.modal.style.display = "block";
-  elements.modal.classList.remove("open");
 }
 
 document.addEventListener("DOMContentLoaded", initialize);
