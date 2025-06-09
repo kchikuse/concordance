@@ -21,11 +21,13 @@ class DatabaseService {
     try {
       const version = await this.checkForDatabaseUpdates();
       const buffer = await this.loadDatabaseBuffer(version);
-      
+
       await this.sqlService.initialize(buffer);
       this.isInitialized = true;
-      
-      console.log(`Database loaded successfully, size: ${buffer.byteLength} bytes`);
+
+      console.log(
+        `Database loaded successfully, size: ${buffer.byteLength} bytes`
+      );
     } catch (error) {
       console.error("Database initialization failed:", error);
       throw new Error(`DB initialization failed: ${error.message || error}`);
@@ -34,7 +36,7 @@ class DatabaseService {
 
   async loadDatabaseBuffer(version) {
     const dbUrl = `${this.DB_NAME}?v=${version}`;
-    
+
     // Try cache first
     let buffer = await this.loadFromCache(dbUrl);
     if (buffer) {
@@ -43,15 +45,17 @@ class DatabaseService {
     }
 
     if (!navigator.onLine) {
-      throw new Error("Cannot load database: device is offline and no cached version found");
+      throw new Error(
+        "Cannot load database: device is offline and no cached version found"
+      );
     }
 
     buffer = await this.loadFromNetwork(dbUrl);
     console.log("Fetched database from network");
-    
+
     // Cache for future use
     await this.cacheDatabase(dbUrl, buffer);
-    
+
     return buffer;
   }
 
@@ -112,7 +116,9 @@ class DatabaseService {
         const data = await response.json();
 
         if (data.version !== storedVersion) {
-          console.log(`Database update available: ${storedVersion} → ${data.version}`);
+          console.log(
+            `Database update available: ${storedVersion} → ${data.version}`
+          );
           localStorage.setItem(this.VERSION_KEY, data.version);
           await this.clearCachedDatabase();
           return data.version;
@@ -172,7 +178,7 @@ class DatabaseService {
 
   async searchText(query, limit = 20) {
     this.validateSearchQuery(query);
-    
+
     const searchQuery = query.trim();
     if (searchQuery.length < 2) {
       return { results: [], query: searchQuery };
@@ -189,7 +195,7 @@ class DatabaseService {
 
   // Validation methods
   validateBookNumber(book) {
-    if (!book || typeof book !== "number") {
+    if (!book || typeof book !== "number" || book < 1 || book > 66) {
       throw new Error("Invalid book number");
     }
   }

@@ -342,6 +342,8 @@ const StrongsHandler = {
     let bodyHtml = "";
     if (data.pron)
       bodyHtml += `<p><strong>Pronunciation:</strong> ${data.pron}</p>`;
+    if (data.translit)
+      bodyHtml += `<p><strong>Transliteration:</strong> ${data.translit}</p>`;
     if (data.derivation)
       bodyHtml += `<p><strong>Derivation:</strong> ${data.derivation}</p>`;
     if (data.strongs_def)
