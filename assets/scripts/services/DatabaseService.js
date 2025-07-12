@@ -4,7 +4,7 @@ class DatabaseService {
     this.isInitialized = false;
     this.initPromise = null;
     this.CACHE_NAME = "concordance-cache-v1";
-    this.DB_NAME = "assets/kjv.sqlite";
+    this.DB_URL = "./assets/kjv.sqlite";
     this.VERSION_KEY = "dbVersion";
   }
 
@@ -12,168 +12,141 @@ class DatabaseService {
     if (this.initPromise) {
       return this.initPromise;
     }
-
     this.initPromise = this.initializeDatabase();
     return this.initPromise;
   }
 
   async initializeDatabase() {
     try {
-      const version = await this.checkForDatabaseUpdates();
-      const buffer = await this.loadDatabaseBuffer(version);
+      const buffer = await this.loadDatabaseBuffer();
 
       await this.sqlService.initialize(buffer);
       this.isInitialized = true;
-
-      console.log(
-        `Database loaded successfully, size: ${buffer.byteLength} bytes`
-      );
     } catch (error) {
-      console.error("Database initialization failed:", error);
       throw new Error(`DB initialization failed: ${error.message || error}`);
     }
   }
 
-  async loadDatabaseBuffer(version) {
-    const dbUrl = `${this.DB_NAME}?v=${version}`;
-
-    // Try cache first
-    let buffer = await this.loadFromCache(dbUrl);
-    if (buffer) {
-      console.log("Loading database from cache");
-      return buffer;
+  async loadDatabaseBuffer() {
+    const cachedBuffer = await this.loadFromCache();
+    if (cachedBuffer) {
+      return cachedBuffer;
     }
 
     if (!navigator.onLine) {
       throw new Error(
-        "Cannot load database: device is offline and no cached version found"
+        "Application is offline and the database is not cached. Please connect to the internet to download it for the first time."
       );
     }
 
-    buffer = await this.loadFromNetwork(dbUrl);
-    console.log("Fetched database from network");
+    const networkBuffer = await this.loadFromNetwork();
 
-    // Cache for future use
-    await this.cacheDatabase(dbUrl, buffer);
+    await this.cacheDatabase(networkBuffer);
 
-    return buffer;
+    return networkBuffer;
   }
 
-  async loadFromCache(dbUrl) {
-    if (!("caches" in self)) return null;
+  async loadFromCache() {
+    if (!("caches" in window)) {
+      return null;
+    }
 
     try {
       const cache = await caches.open(this.CACHE_NAME);
-      const cachedResponses = await Promise.all([
-        cache.match(dbUrl),
-        cache.match(this.DB_NAME),
-      ]);
-      const cachedResponse = cachedResponses[0] || cachedResponses[1];
+      const possibleKeys = [this.DB_URL, new Request(this.DB_URL)];
 
-      if (cachedResponse) {
-        return await cachedResponse.arrayBuffer();
-      }
-    } catch (e) {
-      console.warn("Failed to check cache", e);
-    }
-
-    return null;
-  }
-
-  async loadFromNetwork(dbUrl) {
-    const response = await fetch(dbUrl);
-    if (!response.ok) {
-      throw new Error("Failed to fetch database: " + response.status);
-    }
-    return await response.arrayBuffer();
-  }
-
-  async cacheDatabase(dbUrl, buffer) {
-    if (!("caches" in self)) return;
-
-    try {
-      const cache = await caches.open(this.CACHE_NAME);
-      const responseToCache = new Response(buffer.slice(0));
-      await cache.put(dbUrl, responseToCache);
-      console.log("Cached database for offline use");
-    } catch (e) {
-      console.warn("Failed to cache database", e);
-    }
-  }
-
-  async checkForDatabaseUpdates() {
-    const storedVersion = localStorage.getItem(this.VERSION_KEY) || "1.0.0";
-
-    if (!navigator.onLine) {
-      console.log("Offline: using stored database version:", storedVersion);
-      return storedVersion;
-    }
-
-    try {
-      const response = await fetch(`assets/db-version.json?t=${Date.now()}`);
-
-      if (response.ok) {
-        const data = await response.json();
-
-        if (data.version !== storedVersion) {
-          console.log(
-            `Database update available: ${storedVersion} → ${data.version}`
-          );
-          localStorage.setItem(this.VERSION_KEY, data.version);
-          await this.clearCachedDatabase();
-          return data.version;
-        } else {
-          console.log("Database is up to date", storedVersion);
+      for (const key of possibleKeys) {
+        const cachedResponse = await cache.match(key);
+        if (cachedResponse) {
+          return await cachedResponse.arrayBuffer();
         }
       }
+
+      return null;
     } catch (error) {
-      console.warn("Unable to check for updates", error);
+      return null;
     }
-
-    return storedVersion;
   }
 
-  async clearCachedDatabase() {
-    if (!("caches" in self)) return;
+  async loadFromNetwork() {
+    try {
+      const response = await fetch(this.DB_URL);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const buffer = await response.arrayBuffer();
+      return buffer;
+    } catch (error) {
+      throw new Error(
+        `Network error while fetching database: ${error.message}`
+      );
+    }
+  }
+
+  async cacheDatabase(buffer) {
+    if (!("caches" in window)) {
+      console.warn("Cache API not supported - database will not be cached");
+      return;
+    }
 
     try {
       const cache = await caches.open(this.CACHE_NAME);
-      const cacheKeys = await cache.keys();
-      for (const request of cacheKeys) {
-        if (request.url.includes(this.DB_NAME)) {
-          await cache.delete(request);
-          console.log("Cleared cached database due to version change");
-        }
-      }
-    } catch (e) {
-      console.error("Error clearing cache", e);
+      const responseToCache = new Response(buffer.slice(0), {
+        headers: {
+          "Content-Type": "application/octet-stream",
+          "Cache-Control": "public, max-age=315360000",
+        },
+      });
+
+      await cache.put(this.DB_URL, responseToCache);
+    } catch (error) {
+      console.warn("Failed to cache database", error);
     }
   }
 
-  // Database query methods
   async getChapters(book) {
     this.validateBookNumber(book);
-    return await this.sqlService.queryColumn(
-      "SELECT DISTINCT chapter FROM verses WHERE book = :book ORDER BY chapter",
-      { ":book": book }
-    );
+    try {
+      return await this.sqlService.queryColumn(
+        "SELECT DISTINCT chapter FROM verses WHERE book = :book ORDER BY chapter",
+        { ":book": book }
+      );
+    } catch (error) {
+      throw new Error(
+        `Failed to fetch chapters for book ${book}: ${error.message}`
+      );
+    }
   }
 
   async getVerses(book, chapter) {
     this.validateBookNumber(book);
     this.validateChapterNumber(chapter);
-    return await this.sqlService.query(
-      "SELECT verse, text FROM verses WHERE book = :book AND chapter = :chapter ORDER BY verse",
-      { ":book": book, ":chapter": chapter }
-    );
+    try {
+      return await this.sqlService.query(
+        "SELECT verse, text FROM verses WHERE book = :book AND chapter = :chapter ORDER BY verse",
+        { ":book": book, ":chapter": chapter }
+      );
+    } catch (error) {
+      throw new Error(
+        `Failed to fetch verses for ${book}:${chapter}: ${error.message}`
+      );
+    }
   }
 
   async getStrongsInfo(key) {
     this.validateStrongsKey(key);
-    return await this.sqlService.queryOne(
-      "SELECT key, lemma, xlit, pron, derivation, strongs_def, kjv_def, translit FROM strongs WHERE key = :key LIMIT 1",
-      { ":key": key }
-    );
+    try {
+      return await this.sqlService.queryOne(
+        "SELECT key, lemma, xlit, pron, derivation, strongs_def, kjv_def, translit FROM strongs WHERE key = :key LIMIT 1",
+        { ":key": key }
+      );
+    } catch (error) {
+      throw new Error(
+        `Failed to fetch Strong's info for ${key}: ${error.message}`
+      );
+    }
   }
 
   async searchText(query, limit = 20) {
@@ -184,16 +157,19 @@ class DatabaseService {
       return { results: [], query: searchQuery };
     }
 
-    const ftsQuery = `"${searchQuery.replace(/"/g, '""')}*"`;
-    const results = await this.sqlService.query(
-      "SELECT book, chapter, verse, text FROM verses WHERE text MATCH :query ORDER BY book, chapter, verse LIMIT :limit",
-      { ":query": ftsQuery, ":limit": limit }
-    );
+    try {
+      const ftsQuery = `"${searchQuery.replace(/"/g, '""')}*"`;
+      const results = await this.sqlService.query(
+        "SELECT book, chapter, verse, text FROM verses WHERE text MATCH :query ORDER BY book, chapter, verse LIMIT :limit",
+        { ":query": ftsQuery, ":limit": limit }
+      );
 
-    return { results, query: searchQuery };
+      return { results, query: searchQuery };
+    } catch (error) {
+      throw new Error(`Failed to search for "${query}": ${error.message}`);
+    }
   }
 
-  // Validation methods
   validateBookNumber(book) {
     if (!book || typeof book !== "number" || book < 1 || book > 66) {
       throw new Error("Invalid book number");

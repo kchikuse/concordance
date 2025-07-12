@@ -73,6 +73,7 @@ const bookMap = {
 const CACHE_NAME = "concordance-cache-v1";
 const LAST_BOOK_ID = Math.max(...Object.keys(bookMap).map(Number));
 const STORAGE_KEY = "concordance_last_state";
+const DB_URL = "./assets/kjv.sqlite";
 
 // =====================
 // DOM ELEMENTS
@@ -121,7 +122,7 @@ const Database = {
       state.dbReady = true;
       UI.populateBookSelect();
     } catch (error) {
-      ErrorHandler.showGenericError(error);
+      ErrorHandler.showDatabaseError(error);
       elements.bookSelect.disabled = true;
       elements.chapterSelect.disabled = true;
       Navigation.removeControls();
@@ -131,25 +132,23 @@ const Database = {
   async preCacheDatabase() {
     if ("serviceWorker" in navigator && "caches" in window) {
       try {
-        const version = localStorage.getItem("dbVersion") || "1.0.0";
-        const dbUrl = `assets/kjv.sqlite?v=${version}`;
         const cache = await caches.open(CACHE_NAME);
-        const cachedResponse = await cache.match(dbUrl);
+        const cachedResponse = await cache.match(DB_URL);
 
-        if (!cachedResponse) {
-          console.log("pre-caching database for offline use");
+        if (!cachedResponse && navigator.onLine) {
           try {
-            const response = await fetch(dbUrl);
+            const response = await fetch(DB_URL);
             if (response.ok) {
-              await cache.put(dbUrl, response);
-              console.log("database cached successfully");
+              await cache.put(DB_URL, response);
+            } else {
+              console.warn("Failed to pre-cache database", response.status);
             }
-          } catch (e) {
-            console.warn("failed to pre-cache database", e);
+          } catch (error) {
+            console.warn("Failed to pre-cache database", error);
           }
         }
-      } catch (e) {
-        console.error("error during database pre-caching", e);
+      } catch (error) {
+        console.error("Error during database pre-caching", error);
       }
     }
   },
@@ -650,6 +649,7 @@ const DataFetcher = {
     if (chapterToSelect !== null) {
       elements.chapterSelect.value = chapterToSelect;
       state.currentChapter = chapterToSelect;
+      StateManager.saveState();
       this.fetchVerses(state.currentBook, state.currentChapter);
     }
   },
@@ -908,6 +908,14 @@ const EventHandlers = {
     elements.searchInput.addEventListener("keyup", (event) => {
       if (event.key === "Enter") {
         const query = elements.searchInput.value.trim();
+        // Allow empty query to clear results and state
+        if (query.length === 0) {
+          elements.searchResultsContainer.style.display = "none";
+          elements.searchResultsContainer.innerHTML = "";
+          StateManager.saveState();
+          return;
+        }
+
         if (query.length < 2) return;
 
         if (state.searchTimeout) clearTimeout(state.searchTimeout);
@@ -928,6 +936,15 @@ const EventHandlers = {
 
           StateManager.saveState();
         }, 300);
+      }
+    });
+
+    elements.searchInput.addEventListener("input", () => {
+      if (elements.searchInput.value.trim() === "") {
+        elements.searchResultsContainer.style.display = "none";
+        elements.searchResultsContainer.innerHTML = "";
+        if (state.searchTimeout) clearTimeout(state.searchTimeout);
+        StateManager.saveState();
       }
     });
   },
@@ -978,6 +995,22 @@ const StateManager = {
 };
 
 // =====================
+// SERVICE WORKER REGISTRATION
+// =====================
+async function registerServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    try {
+      await navigator.serviceWorker.register("./service-worker.js");
+      await navigator.serviceWorker.ready;
+    } catch (error) {
+      console.error("Service worker registration failed", error);
+    }
+  } else {
+    console.log("Service workers not supported");
+  }
+}
+
+// =====================
 // INITIALIZATION
 // =====================
 function restoreLastState() {
@@ -1004,15 +1037,20 @@ function restoreLastState() {
 }
 
 async function initialize() {
-  await Database.preCacheDatabase();
-  await Database.initialize();
-  EventHandlers.init();
-  StrongsHandler.init();
-  Theme.setTheme(Theme.getCurrentTheme());
+  try {
+    await registerServiceWorker();
+    await Database.preCacheDatabase();
+    await Database.initialize();
+    EventHandlers.init();
+    StrongsHandler.init();
+    Theme.setTheme(Theme.getCurrentTheme());
 
-  elements.tooltip.setAttribute("aria-hidden", "true");
+    elements.tooltip.setAttribute("aria-hidden", "true");
 
-  restoreLastState();
+    restoreLastState();
+  } catch (error) {
+    ErrorHandler.showGenericError(error);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initialize);
