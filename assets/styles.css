@@ -39,6 +39,7 @@
   --placeholder-color: #9ca3af;
   --disabled-bg: #f3f4f6;
   --tooltip-bg: #f0f6f8;
+  --tooltip-strong: #86a5d6;
 }
 
 [data-theme="dark"] {
@@ -74,6 +75,7 @@
   --placeholder-color: #6b7280;
   --disabled-bg: #374151;
   --tooltip-bg: #132e37;
+  --tooltip-strong: #858fa4;
 }
 
 * {
@@ -454,7 +456,7 @@ main {
 }
 
 #tooltip-content strong {
-  color: var(--text-color);
+  color: var(--tooltip-strong);
   font-weight: 600;
   display: inline-block;
   min-width: 100px;
